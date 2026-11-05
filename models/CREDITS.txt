@@ -42,3 +42,37 @@ goal17.glb | Big Barn | Quaternius | CC0 1.0 | https://poly.pizza/m/q1N3xn2SpC
 goal18.glb | Tower | Quaternius | CC0 1.0 | https://poly.pizza/m/iuMDwgTRMU
 goal19.glb | Town House | Quaternius | CC0 1.0 | https://poly.pizza/m/sDQJBImZuw
 goal20.glb | Port | Quaternius | CC0 1.0 | https://poly.pizza/m/Gjt5yMM4Vw
+yak.glb | Bull | Quaternius | CC0 1.0 | https://poly.pizza/m/a8PIIYwF7r
+fox.glb | Fox | Quaternius | CC0 1.0 | https://poly.pizza/m/Bc97C66HKi
+cow.glb | Cow | Quaternius | CC0 1.0 | https://poly.pizza/m/26zM1outCr
+minecart.glb | minecart | Quaternius | CC0 1.0 | https://poly.pizza/m/ypAEwOy2Cn
+ore_rock.glb | Gold ore | Quaternius | CC0 1.0 | https://poly.pizza/m/i1ic0r7FUI
+mine.glb | Mountains | Quaternius | CC0 1.0 | https://poly.pizza/m/w9VBrh7Nz0
+mill.glb | Windmill | Quaternius | CC0 1.0 | https://poly.pizza/m/WUbU1Nct2W
+well.glb | Well | Quaternius | CC0 1.0 | https://poly.pizza/m/QlqncKYxXb
+wheat.glb | Wheat | Quaternius | CC0 1.0 | https://poly.pizza/m/lPspzfC8Pu
+barn_small.glb | Farm | Quaternius | CC0 1.0 | https://poly.pizza/m/INctJkmEAl
+item_ingot.glb | Gold Ingots | Quaternius | CC0 1.0 | https://poly.pizza/m/3jRhAgbc6t
+item_tools.glb | Stone Pickaxe | Quaternius | CC0 1.0 | https://poly.pizza/m/pvOeJ5EcpW
+item_bread.glb | Bread | Quaternius | CC0 1.0 | https://poly.pizza/m/1gzhqdQ4vu
+item_flour.glb | Bag Open | Quaternius | CC0 1.0 | https://poly.pizza/m/rJuZexcuhU
+goal21.glb | Barracks | Quaternius | CC0 1.0 | https://poly.pizza/m/jjbNh1vCbj
+goal22.glb | Barracks | Quaternius | CC0 1.0 | https://poly.pizza/m/lnyADheSvA
+goal23.glb | Barracks | Quaternius | CC0 1.0 | https://poly.pizza/m/a1C1L8gJTX
+goal24.glb | Barracks | Quaternius | CC0 1.0 | https://poly.pizza/m/puD1kbV4kf
+goal25.glb | Stone Tower | Quaternius | CC0 1.0 | https://poly.pizza/m/dJLAD6p90F
+goal26.glb | Barracks | Quaternius | CC0 1.0 | https://poly.pizza/m/UXCOwRBSxx
+goal27.glb | Bell Tower | Quaternius | CC0 1.0 | https://poly.pizza/m/ux44tbeQvj
+goal28.glb | Temple | Quaternius | CC0 1.0 | https://poly.pizza/m/CE2Mn7lh6A
+goal29.glb | Fantasy Barracks | Quaternius | CC0 1.0 | https://poly.pizza/m/wTDbVozPAj
+goal30.glb | Castle | Quaternius | CC0 1.0 | https://poly.pizza/m/opTOmcN3o9
+goal31.glb | Market Stalls | Quaternius | CC0 1.0 | https://poly.pizza/m/PUZZ5F91OE
+goal32.glb | Market Stalls Compact | Quaternius | CC0 1.0 | https://poly.pizza/m/fmHUuX9AS3
+goal33.glb | Horse Statue | Quaternius | CC0 1.0 | https://poly.pizza/m/AK9CmjFnL6
+goal34.glb | Fox Statue | Quaternius | CC0 1.0 | https://poly.pizza/m/abxyXID5EA
+goal35.glb | Large Town House | Quaternius | CC0 1.0 | https://poly.pizza/m/Sl3ZTrWRwn
+goal36.glb | Market Scene | Quaternius | CC0 1.0 | https://poly.pizza/m/LkNRqxdCKp
+goal37.glb | Market Stalls | Quaternius | CC0 1.0 | https://poly.pizza/m/OLd8vu6lPL
+goal38.glb | Tower Windmill | Quaternius | CC0 1.0 | https://poly.pizza/m/52yaPyaAAG
+goal39.glb | Town Center Second Age | Quaternius | CC0 1.0 | https://poly.pizza/m/sPY1OPVCAX
+goal40.glb | Town House | Quaternius | CC0 1.0 | https://poly.pizza/m/imVkxz7oZD

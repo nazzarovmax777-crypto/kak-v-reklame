@@ -10,6 +10,8 @@ window.KVR_LEVELS = (() => {
   const carrier = (from, to) => ({ t: 'helper', from, to });
   const big = () => [...gr('tree', -9, -7, 5), { id: 'saw', t: 'saw', x: -4, z: -7.5 }, { id: 'm', t: 'market', x: 2, z: -8.5 },
     ...gr('rock', 9, -7, 5), ...gr('hole', -9, 3, 5)];
+  // Время на звезду «за скорость» по уровням, секунды: время бота ×1.5 (живой игрок медленнее идеального)
+  const PAR = [150, 150, 150, 165, 180, 150, 195, 195, 180, 180, 270, 270, 270, 285, 270, 255, 300, 285, 345, 360, 285, 270, 300, 285, 285, 270, 375, 360, 300, 360, 390, 390, 375, 450, 405, 420, 405, 495, 450, 480];
   return [
     { name: 'Первая вырубка', goal: 'Склад', w: 20, h: 18, start: [0, 3], color: 0x6aa5d8,
       hint: 'Подойди к ёлкам — брёвна соберутся сами. Отнеси их в лавку и забери деньги.',
@@ -219,8 +221,8 @@ window.KVR_LEVELS = (() => {
             { id: 'c', cost: 35, x: -3, z: 7, label: 'РЮКЗАК +4', effect: 'cap' },
             { id: 'g', cost: 1800, x: 5, z: 7.5, label: 'АМБАР', goal: true, req: 'f' },
           ] },
-        { name: 'Бригада', goal: 'Сторожевая вышка', w: 24, h: 22, start: [0, 5], color: 0xc2584a, water: [pond],
-          hint: 'Теперь можно улучшить бригаду: работники станут быстрее и унесут больше.',
+        { name: 'Помощники', goal: 'Сторожевая вышка', w: 24, h: 22, start: [0, 5], color: 0xc2584a, water: [pond],
+          hint: 'Новая площадка «УЛУЧШИТЬ РАБОТНИКОВ»: все работники сразу станут быстрее и будут носить больше.',
           wolves: { first: 30, every: 13, max: 2, speed: 4.7 }, moose: { first: 50, every: 40, max: 1, speed: 3.7, dmg: 2, aggro: 5 },
           ents: [...pondBase(), { id: 'd1', t: 'dock', x: 8.5, z: -5.6 }, ...reedsAt([[5.6, -5.4], [11, -5]])],
           pads: [
@@ -266,7 +268,7 @@ window.KVR_LEVELS = (() => {
             { id: 'g', cost: 1600, x: 4, z: 7.5, label: 'БАШНЯ', goal: true, req: 'gp' },
           ] },
         { name: 'Большая вода', goal: 'Городской дом', w: 28, h: 24, start: [2, 6], color: 0xc9ced6, water: bigWater,
-          hint: 'Всё озеро сразу. Парус, грузчики, бригада — без них не успеть.',
+          hint: 'Всё озеро сразу. Парус, грузчики, улучшенные работники — без них не успеть.',
           wolves: { first: 30, every: 12, max: 2, speed: 4.9 }, moose: { first: 60, every: 35, max: 1, speed: 3.9, dmg: 2, aggro: 5 },
           ents: bigBase(),
           pads: [...bigPads(), { id: 'sl', cost: 140, x: 12.5, z: -3.8, label: 'ПАРУС', effect: 'sail', dock: 'd1' },
@@ -280,19 +282,92 @@ window.KVR_LEVELS = (() => {
             { id: 'g', cost: 1200, x: 8, z: 8, label: 'ПОРТ', goal: true, req: 'gp' }] },
       ];
     })(),
-  ];
+    // ---------- Мир 3: Горы ----------
+    ...(() => {
+      const base = (o = {}) => [
+        { id: 'm', t: 'market', x: -3.5, z: -7.5 }, { id: 'mine1', t: 'mine', x: 9, z: -7.6 },
+        ...gr('ore', 8.5, .5, 4),
+        ...(o.smelt ? [{ id: 'smelt', t: 'smelt', x: 2.5, z: -6.5 }] : []),
+        ...(o.wood ? [...gr('tree', -8.5, -6, 4), { id: 'saw', t: 'saw', x: -7, z: 1.5 }] : []),
+      ];
+      const pads = (o = {}) => [
+        ...(o.smelt ? [] : [{ id: 'sp', cost: 30, x: 2.5, z: -6.5, label: 'ПЛАВИЛЬНЯ', builds: [{ id: 'smelt', t: 'smelt' }] }]),
+        ...(o.cart ? [{ id: 'ct', cost: o.cart, x: 5.5, z: -2.5, label: 'ВАГОНЕТКА', req: o.smelt ? undefined : 'sp', builds: [{ t: 'cart', from: 'mine1', to: 'smelt' }] }] : []),
+        { id: 'f', cost: 30, x: 0, z: 2, label: 'КОСТЁР', builds: [fire(3.6)] },
+        { id: 'h1', cost: 50, x: 9.5, z: 4, label: 'ГОРНЯК', req: o.smelt ? undefined : 'sp', builds: [worker('ore', 'smelt')] },
+        { id: 'k1', cost: 60, x: -1, z: -2.5, label: 'ГРУЗЧИК', req: 'h1', builds: [carrier('smelt', 'm')] },
+        ...(o.wood ? [{ id: 'h2', cost: 50, x: -9, z: 6, label: 'ЛЕСОРУБ', builds: [worker('tree', 'saw')] }] : []),
+        { id: 'c', cost: 45, x: -3, z: 7.5, label: 'РЮКЗАК +4', effect: 'cap' },
+        { id: 'bt', cost: 50, x: 1.5, z: 8, label: 'САПОГИ', effect: 'speed' },
+      ];
+      const L = (name, goal, label, cost, o) => ({ name, goal, w: 24, h: 22, start: [0, 5], color: 0x8a96a3, hint: o.hint,
+        wolves: o.wolves, moose: o.yak, storm: o.storm, ents: base(o), pads: [...pads(o), { id: 'g', cost, x: 7, z: 7.5, label, goal: true, req: o.smelt ? 'f' : 'sp' }] });
+      const W = (first, every, max, speed, boss) => ({ first, every, max, speed, ...(boss ? { boss } : {}) });
+      const yak = (first, every, max) => ({ kind: 'yak', first, every, max, speed: 4.0, dmg: 2, aggro: 5 });
+      return [
+        L('Перевал', 'Застава', 'ЗАСТАВА', 1650, { hint: 'Горы: руда у скал и шахта, которая добывает сама. Плавильня делает из руды слитки.', wolves: W(30, 14, 2, 4.8) }),
+        L('Вагонетки', 'Депо', 'ДЕПО', 1750, { cart: 80, hint: 'Купи вагонетку — она сама повезёт руду из шахты в плавильню.', wolves: W(30, 14, 2, 4.8) }),
+        L('Горный лес', 'Горный дом', 'ГОРНЫЙ ДОМ', 1300, { cart: 80, wood: true, hint: 'В горах растёт и лес: пилорама рядом с рудником.', wolves: W(30, 13, 2, 4.9) }),
+        L('Буря', 'Приют', 'ПРИЮТ', 1900, { cart: 80, storm: { first: 35, every: 45, dur: 12 }, hint: 'Время от времени налетает буря: всё вокруг медленнее и видно хуже.', wolves: W(30, 13, 2, 4.9) }),
+        L('Яки', 'Каменная башня', 'КАМЕННАЯ БАШНЯ', 1800, { cart: 80, yak: yak(45, 35, 1), hint: 'Горный як бодается на 2 сердца. Факел пугает его с первого касания.', wolves: W(30, 14, 2, 4.9) }),
+        L('Рудный двор', 'Рудный двор', 'РУДНЫЙ ДВОР', 2100, { smelt: true, cart: 90, storm: { first: 40, every: 45, dur: 12 }, yak: yak(50, 35, 1), hint: 'Плавильня уже стоит. Вагонетка и горняки решают всё.', wolves: W(30, 13, 2, 5) }),
+        L('Ледник', 'Колокольня', 'КОЛОКОЛЬНЯ', 1700, { cart: 90, wood: true, storm: { first: 30, every: 30, dur: 14 }, hint: 'Бури здесь часто. Держись ближе к костру.', wolves: W(25, 12, 3, 5) }),
+        L('Храм', 'Храм', 'ХРАМ', 1300, { cart: 90, wood: true, yak: yak(45, 35, 1), storm: { first: 40, every: 45, dur: 12 }, hint: 'Руда, лес и звери — всё сразу.', wolves: W(30, 13, 2, 5) }),
+        L('Крепость', 'Крепость горцев', 'КРЕПОСТЬ', 2300, { smelt: true, cart: 100, wood: true, yak: yak(40, 30, 2), storm: { first: 40, every: 40, dur: 12 }, hint: 'Два яка и бури. Работники IV получат факелы и перестанут бояться зверей.', wolves: W(30, 12, 2, 5) }),
+        L('Белый волк', 'Замок', 'ЗАМОК', 1500, { cart: 100, wood: true, storm: { first: 50, every: 45, dur: 12 }, hint: 'Босс-уровень: на 60-й секунде придёт Белый волк. Замок откроется, когда прогонишь его факелом 4 раза.',
+          wolves: W(30, 13, 2, 5, { at: 60, hp: 4, name: 'БЕЛЫЙ ВОЛК', tint: 'white' }) }),
+      ];
+    })(),
+
+    // ---------- Мир 4: Долина ----------
+    ...(() => {
+      const field = [[-9.5, -8], [-8, -8], [-6.5, -8], [-9.5, -6.3], [-8, -6.3], [-6.5, -6.3]].map(([x, z]) => ({ t: 'wheat', x, z }));
+      const base = (o = {}) => [
+        { id: 'm', t: 'market', x: 5, z: -7.5 }, ...field,
+        ...(o.mill ? [{ id: 'mill', t: 'mill', x: -1, z: -7 }] : []),
+        ...(o.farm ? [{ id: 'f1', t: 'farm', x: 9.5, z: -6.2 }] : []),
+      ];
+      const pads = (o = {}) => [
+        ...(o.mill ? [] : [{ id: 'mp', cost: 30, x: -1, z: -7, label: 'МЕЛЬНИЦА', builds: [{ id: 'mill', t: 'mill' }] }]),
+        ...(o.well ? [{ id: 'wl', cost: o.well, x: -5, z: -2.5, label: 'КОЛОДЕЦ', effect: 'water', builds: [{ t: 'decor', model: 'well' }] }] : []),
+        { id: 'f', cost: 30, x: 0, z: 2, label: 'КОСТЁР', builds: [fire(3.6)] },
+        { id: 'h1', cost: 50, x: -7, z: 2.5, label: 'ЖНЕЦ', req: o.mill ? undefined : 'mp', builds: [worker('wheat', 'mill')] },
+        ...(o.farm ? [{ id: 'k2', cost: 60, x: 9.5, z: 2.5, label: 'ДОЯРКА', builds: [carrier('f1', 'm')] }] : []),
+        { id: 'k1', cost: 60, x: 2, z: -2.5, label: 'ГРУЗЧИК', req: 'h1', builds: [carrier('mill', 'm')] },
+        { id: 'c', cost: 45, x: -3, z: 7.5, label: 'РЮКЗАК +4', effect: 'cap' },
+        { id: 'bt', cost: 50, x: 1.5, z: 8, label: 'САПОГИ', effect: 'speed' },
+      ];
+      const L = (name, goal, label, cost, o) => ({ name, goal, w: 24, h: 22, start: [0, 5], color: 0xc9a14a, hint: o.hint,
+        wolves: o.wolves, moose: o.fox, ents: base(o), pads: [...pads(o), { id: 'g', cost, x: 7, z: 7.5, label, goal: true, req: o.mill ? 'f' : 'mp' }] });
+      const W = (first, every, max, speed, boss) => ({ first, every, max, speed, ...(boss ? { boss } : {}) });
+      const fox = (first, every, max) => ({ kind: 'fox', first, every, max, speed: 5.2, dmg: 0, aggro: 0 });
+      return [
+        L('Нива', 'Торговые ряды', 'ТОРГОВЫЕ РЯДЫ', 2300, { hint: 'Долина: пшеница растёт на поле, мельница делает муку, а потом хлеб и пироги.', wolves: W(40, 18, 1, 4.7) }),
+        L('Колодец', 'Двор с колодцем', 'ДВОР С КОЛОДЦЕМ', 2400, { well: 60, hint: 'Колодец поливает поле — пшеница вырастает вдвое быстрее.', wolves: W(40, 18, 1, 4.7) }),
+        L('Ферма', 'Конный памятник', 'КОННЫЙ ПАМЯТНИК', 2500, { well: 60, farm: true, hint: 'Коровы на ферме дают молоко сами. Доярка носит его в лавку.', wolves: W(40, 16, 1, 4.8) }),
+        L('Лисы', 'Лисий памятник', 'ЛИСИЙ ПАМЯТНИК', 2650, { well: 60, farm: true, fox: fox(30, 30, 1), hint: 'Лиса не кусает, но ворует с лотков и из лавки. Подбеги — и она удерёт.', wolves: W(45, 18, 1, 4.8) }),
+        L('Мастера', 'Большой дом', 'БОЛЬШОЙ ДОМ', 2750, { mill: true, well: 60, farm: true, fox: fox(40, 35, 1), hint: 'Работники III: ещё быстрее, носят по 9 и выдерживают 4 укуса.', wolves: W(40, 16, 2, 4.8) }),
+        L('Ярмарка', 'Ярмарка', 'ЯРМАРКА', 2700, { well: 60, farm: true, fox: fox(30, 25, 2), hint: 'Две лисы и волки. Лотки у костра лисы не трогают.', wolves: W(40, 16, 1, 4.9) }),
+        L('Пекарня', 'Пекарня', 'ПЕКАРНЯ', 2900, { mill: true, well: 60, farm: true, fox: fox(40, 30, 1), hint: 'Мельница III печёт пироги — самый дорогой товар долины.', wolves: W(40, 15, 2, 4.9) }),
+        L('Жатва', 'Башня-мельница', 'БАШНЯ-МЕЛЬНИЦА', 2900, { well: 70, farm: true, fox: fox(30, 25, 2), hint: 'Жаркие дни: звери злее, лисы наглее.', wolves: W(35, 14, 2, 4.9) }),
+        L('Большая ярмарка', 'Ратуша', 'РАТУША', 3100, { mill: true, well: 70, farm: true, fox: fox(30, 25, 2), hint: 'Всё сразу: поле, ферма, мельница, лисы и волки.', wolves: W(35, 14, 2, 5) }),
+        L('Рыжая', 'Дворец', 'ДВОРЕЦ', 3200, { well: 70, farm: true, fox: fox(45, 30, 1), hint: 'Босс-уровень: на 60-й секунде придёт Рыжая — огромная лиса-воровка. Дворец откроется, когда прогонишь её факелом 4 раза.',
+          wolves: W(40, 16, 1, 5, { at: 60, hp: 4, name: 'РЫЖАЯ', kind: 'fox' }) }),
+      ];
+    })(),
+  ].map((L, i) => ({ ...L, par: PAR[i] }));
 })();
 
 // Миры по 10 уровней. models — модели, которые нужны только этому миру (грузятся при входе в мир)
 window.KVR_WORLDS = [
   { name: 'Тайга', from: 0, models: ['sawmill', 'kiln', 'grill', 'goal1', 'goal2', 'goal3', 'goal4', 'goal5', 'goal6', 'goal7', 'goal8', 'goal9', 'goal10'] },
   { name: 'Озёрный край', from: 10, models: ['sawmill', 'grill', 'weaver', 'moose', 'boat', 'sailboat', 'dock', 'bridge', 'lily', 'reeds', 'item_box', 'goal11', 'goal12', 'goal13', 'goal14', 'goal15', 'goal16', 'goal17', 'goal18', 'goal19', 'goal20'] },
-  { name: 'Горы' },
-  { name: 'Долина' },
-  { name: 'Каньон' },
-  { name: 'Побережье' },
-  { name: 'Болота' },
-  { name: 'Вулкан' },
-  { name: 'Ледяные пещеры' },
-  { name: 'Столица' },
+  { name: 'Горы', from: 20, ground: 0xf1f5f8, floor: 0xc3c9cf, models: ['kiln', 'sawmill', 'mine', 'minecart', 'ore_rock', 'yak', 'item_ingot', 'item_tools', 'goal21', 'goal22', 'goal23', 'goal24', 'goal25', 'goal26', 'goal27', 'goal28', 'goal29', 'goal30'] },
+  { name: 'Долина', from: 30, ground: 0xbfe39a, floor: 0xd9b27a, models: ['mill', 'well', 'wheat', 'barn_small', 'cow', 'fox', 'item_bread', 'item_flour', 'goal31', 'goal32', 'goal33', 'goal34', 'goal35', 'goal36', 'goal37', 'goal38', 'goal39', 'goal40'] },
+  { name: 'Каньон', teaser: 'Песок плавится в стекло, вода на вес золота, а в камнях прячутся скорпионы.' },
+  { name: 'Побережье', teaser: 'Корабли ждут заказы, а чайки и пираты тащат всё, что плохо лежит.' },
+  { name: 'Болота', teaser: 'Туман, светлячки и зелья из трав. Ночью без фонаря — никуда.' },
+  { name: 'Вулкан', teaser: 'Лава перекрывает дороги — строй мосты из обсидиана и успевай.' },
+  { name: 'Ледяные пещеры', teaser: 'Скользкий лёд, кристаллы и сам йети в финале.' },
+  { name: 'Столица', teaser: 'Все ремёсла сразу и город из десятка районов. Финал игры.' },
 ];

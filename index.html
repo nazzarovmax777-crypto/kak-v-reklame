@@ -1,8 +1,8 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Как в рекламе</title>
+<title>Выживалити: как в рекламе</title>
 
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
@@ -46,6 +46,8 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .goal { justify-self: center; text-align: center; background: var(--panel); border-radius: 14px; padding: 7px 14px; box-shadow: 0 3px 0 rgba(21, 48, 74, .18); max-width: 100%; min-width: 0; }
 .goal .lv { font-family: var(--display); font-weight: 800; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--wood); }
 .goal .gt { font-weight: 800; font-size: 14px; }
+.goal .par { margin-top: 3px; font-family: var(--display); font-weight: 800; font-size: 13px; font-variant-numeric: tabular-nums; color: #c99a12; }
+.goal .par.late { color: #9aa8b6; text-decoration: line-through; }
 .menu-btn { pointer-events: auto; width: 44px; height: 44px; border-radius: 14px; background: var(--panel); box-shadow: 0 3px 0 rgba(21, 48, 74, .18); color: var(--ink); font-size: 18px; font-weight: 900; }
 .cargo {
   position: absolute; left: 50%; transform: translateX(-50%);
@@ -54,6 +56,14 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   font-weight: 800; font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap;
 }
 .cargo.full { background: var(--wood); }
+.boost-btn { position: absolute; right: max(12px, env(safe-area-inset-right, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 70px); pointer-events: auto;
+  display: grid; justify-items: center; gap: 0; padding: 8px 12px 7px; border-radius: 16px; background: linear-gradient(180deg, #ffd23f, #f0a51c); color: var(--ink);
+  box-shadow: 0 4px 0 #b97a0c, 0 8px 18px rgba(0, 0, 0, .25); animation: pulse 1.4s ease-in-out infinite; }
+.boost-btn b { font-family: var(--display); font-size: 22px; line-height: 1; }
+.boost-btn span { font-weight: 800; font-size: 11px; }
+.boost-btn small { font-size: 9px; font-weight: 700; opacity: .7; }
+.play.revive { display: grid; background: linear-gradient(180deg, #ffd23f, #f0a51c); color: var(--ink); box-shadow: 0 5px 0 #b97a0c; margin-bottom: 10px; }
+.play.revive small { font-family: var(--body); font-size: 12px; font-weight: 700; opacity: .75; }
 .hearts { margin-top: 6px; display: flex; gap: 3px; font-size: 22px; line-height: 1; }
 .hearts span { color: var(--alert); text-shadow: 0 2px 0 rgba(21, 48, 74, .18); transition: transform .2s; }
 .hearts span.off { color: rgba(21, 48, 74, .22); transform: scale(.85); }
@@ -69,8 +79,24 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   text-shadow: 0 3px 0 var(--alert), 0 0 18px rgba(0, 0, 0, .25); opacity: 0; transition: opacity .25s;
 }
 .banner.show { opacity: 1; }
+.goal-card {
+  position: absolute; left: 50%; top: 22%; transform: translate(-50%, -10px) scale(.96); width: min(340px, calc(100% - 32px));
+  background: var(--panel); border-radius: 22px; padding: 18px 20px 16px; text-align: center; pointer-events: auto;
+  box-shadow: 0 6px 0 rgba(21, 48, 74, .16), 0 20px 50px rgba(21, 48, 74, .2); opacity: 0; transition: opacity .3s, transform .3s;
+}
+.goal-card.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
+.goal-card small { display: block; font-family: var(--display); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--wood); }
+.goal-card b { display: block; font-family: var(--display); font-weight: 900; font-size: 26px; line-height: 1.1; margin: 6px 0 4px; text-wrap: balance; }
+.goal-card .price { display: inline-flex; align-items: center; gap: 6px; font-family: var(--display); font-weight: 800; font-size: 20px; color: var(--cash); }
+.goal-card .gc-par { margin-top: 6px; color: #c99a12; font-family: var(--display); font-weight: 800; font-size: 15px; }
+.goal-card p { margin: 10px 0 0; font-size: 13px; font-weight: 600; color: #3c5770; line-height: 1.35; }
 #flash { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(transparent 40%, rgba(226, 73, 59, .55)); opacity: 0; transition: opacity .4s; }
 #fx { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+#arrows { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+.edge { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; will-change: transform; }
+.edge i { width: 0; height: 0; border-left: 13px solid transparent; border-right: 13px solid transparent; border-bottom: 22px solid var(--cash); filter: drop-shadow(0 2px 0 rgba(21, 48, 74, .3)); }
+.edge span { background: var(--cash); color: #fff; font-family: var(--display); font-weight: 800; font-size: 12px; padding: 3px 8px; border-radius: 999px; box-shadow: 0 2px 0 rgba(21, 48, 74, .25); white-space: nowrap; }
+.edge.goal i { border-bottom-color: var(--wood); } .edge.goal span { background: var(--wood); }
 .ft { position: absolute; left: 0; top: 0; font-family: var(--display); font-weight: 900; font-size: 20px; color: #fff; text-shadow: 0 2px 0 var(--cash), 0 0 6px rgba(0, 0, 0, .25); white-space: nowrap; will-change: transform; }
 .ft.bad { text-shadow: 0 2px 0 var(--alert), 0 0 6px rgba(0, 0, 0, .25); }
 
@@ -84,9 +110,29 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   padding: calc(env(safe-area-inset-top, 0px) + 16px) max(16px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 16px) max(16px, env(safe-area-inset-left, 0px));
   background: rgba(207, 227, 240, .55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
-.card { width: min(440px, 100%); background: #fff; border-radius: 26px; padding: 28px 22px 22px; box-shadow: 0 8px 0 rgba(21, 48, 74, .16), 0 24px 60px rgba(21, 48, 74, .2); text-align: center; position: relative; }
-.title { font-family: var(--display); font-weight: 900; font-size: clamp(34px, 10vw, 48px); line-height: .98; letter-spacing: -.02em; margin: 6px 0 0; text-wrap: balance; }
-.title em { font-style: normal; color: var(--wood); }
+.card { box-sizing: border-box; min-width: 0; width: min(440px, 100%); background: #fff; border-radius: 26px; padding: 28px 22px 22px; box-shadow: 0 8px 0 rgba(21, 48, 74, .16), 0 24px 60px rgba(21, 48, 74, .2); text-align: center; position: relative; }
+.title { font-family: var(--display); font-weight: 900; font-size: clamp(26px, 8.4vw, 46px); line-height: .98; letter-spacing: -.02em; margin: 6px 0 0; text-wrap: balance; }
+.title em { display: block; font-style: normal; color: var(--wood); font-size: .48em; letter-spacing: 0; margin-top: 6px; }
+.menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.mbtn { display: grid; gap: 2px; text-align: left; padding: 12px 14px; border-radius: 16px; background: var(--snow); color: var(--ink); box-shadow: 0 3px 0 #c9d9e5; }
+.mbtn b { font-family: var(--display); font-size: 15px; font-weight: 800; }
+.mbtn span { font-family: var(--body); font-size: 12px; font-weight: 700; color: #6b8296; }
+.mbtn:active { transform: translateY(2px); box-shadow: 0 1px 0 #c9d9e5; }
+.sheet-head { display: flex; align-items: center; gap: 10px; margin: -6px 0 6px; }
+.sheet-head h2 { font-family: var(--display); font-size: 22px; margin: 0; }
+.back { width: 40px; height: 40px; border-radius: 12px; background: var(--snow); color: var(--ink); font-size: 26px; line-height: 1; font-weight: 800; flex: none; }
+.text-card { text-align: left; }
+.text-card h3 { font-family: var(--display); font-size: 14px; margin: 18px 0 4px; }
+.text-card p { margin: 0 0 8px; font-size: 14px; line-height: 1.45; color: #3c5770; font-weight: 600; }
+.steps { margin: 6px 0 0; padding-left: 22px; display: grid; gap: 8px; font-size: 14px; line-height: 1.45; color: #3c5770; font-weight: 600; }
+.steps b { color: var(--ink); }
+.contact { display: grid; gap: 8px; margin: 12px 0; }
+.contact a, .contact div { display: block; padding: 12px 14px; border-radius: 14px; background: var(--snow); color: var(--ink); text-decoration: none; font-weight: 800; }
+.contact small { display: block; font-weight: 600; color: #6b8296; margin-top: 2px; user-select: text; -webkit-user-select: text; }
+.tut { position: absolute; left: 50%; transform: translateX(-50%); top: calc(env(safe-area-inset-top, 0px) + 112px); width: min(360px, calc(100% - 32px));
+  background: var(--ink); color: #fff; border-radius: 16px; padding: 10px 14px; text-align: center; font-weight: 700; font-size: 15px; line-height: 1.35;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, .25); }
+.tut small { display: block; font-family: var(--display); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); margin-bottom: 2px; }
 .stamp {
   position: absolute; right: 14px; top: -14px; transform: rotate(8deg);
   background: var(--gold); color: var(--ink); font-family: var(--display); font-weight: 800; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
@@ -107,7 +153,12 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .world-h span { font-size: 12px; font-weight: 800; color: #c99a12; font-variant-numeric: tabular-nums; }
 .world-h small { font-family: var(--display); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--wood); margin-right: 6px; }
 .soon { display: flex; flex-wrap: wrap; gap: 6px; }
-.soon span { background: var(--snow); color: #6b8296; border-radius: 999px; padding: 6px 10px; font-size: 12px; font-weight: 700; }
+.soon { display: grid; gap: 8px; }
+.soon .tz { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; align-items: center; background: var(--snow); border-radius: 14px; padding: 10px 12px; }
+.soon .tz i { grid-row: span 2; font-style: normal; font-family: var(--display); font-weight: 900; font-size: 20px; color: #9fb4c6; width: 34px; text-align: center; }
+.soon .tz b { font-family: var(--display); font-size: 13px; }
+.soon .tz b span { font-family: var(--body); font-weight: 700; font-size: 11px; color: #6b8296; margin-left: 6px; }
+.soon .tz em { font-style: normal; font-size: 12.5px; font-weight: 600; color: #3c5770; line-height: 1.35; }
 .lvls .st { font-family: var(--body); font-size: 10px; letter-spacing: 1px; color: var(--gold); text-shadow: 0 1px 0 rgba(21, 48, 74, .25); }
 .lvls .st i { font-style: normal; color: rgba(21, 48, 74, .2); text-shadow: none; }
 .lvls button.cur .st i { color: rgba(255, 255, 255, .45); }
@@ -127,6 +178,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .balance { font-family: var(--display); font-weight: 800; font-size: 18px; margin-top: 6px; }
 .balance b { color: #c99a12; }
 .foot { margin-top: 16px; font-size: 12px; color: #6b8296; line-height: 1.4; }
+.toggles { display: flex; justify-content: center; gap: 6px; }
 .sound { margin-top: 12px; background: none; color: #6b8296; font-family: var(--body); font-weight: 700; font-size: 13px; padding: 6px; }
 .win-big { font-family: var(--display); font-weight: 900; font-size: 34px; margin: 4px 0 6px; }
 .win-sub { font-weight: 700; color: #3c5770; margin-bottom: 18px; }
@@ -134,34 +186,130 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 .stats b { display: block; font-family: var(--display); font-size: 22px; }
 .stats span { font-size: 12px; color: #6b8296; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .money.bump { animation: none; } }
+
+/* Главное меню: живая сцена позади, крупный логотип сверху, большая кнопка и иконки снизу */
+.menu-screen { display: flex; flex-direction: column; justify-content: space-between; align-items: center; place-items: initial;
+  background: linear-gradient(180deg, rgba(21, 48, 74, .55) 0%, rgba(21, 48, 74, 0) 30%, rgba(21, 48, 74, 0) 52%, rgba(21, 48, 74, .7) 100%);
+  -webkit-backdrop-filter: none; backdrop-filter: none; overflow: hidden; }
+.menu-top { width: 100%; max-width: 520px; display: flex; justify-content: space-between; align-items: center; position: relative; }
+.pill { display: flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, .92); border-radius: 999px; padding: 6px 14px 6px 8px; box-shadow: 0 3px 0 rgba(21, 48, 74, .25);
+  font-family: var(--display); font-weight: 800; font-size: 18px; color: var(--ink); }
+.pill .star { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--gold); color: #fff; font-size: 16px; text-shadow: 0 1px 0 #c99a12; }
+.round-btn { width: 46px; height: 46px; border-radius: 50%; background: rgba(255, 255, 255, .92); color: var(--ink); display: grid; place-items: center; box-shadow: 0 3px 0 rgba(21, 48, 74, .25); }
+.round-btn svg { width: 24px; height: 24px; }
+.settings { position: absolute; right: 0; top: 54px; background: #fff; border-radius: 16px; padding: 8px; display: grid; gap: 2px; box-shadow: 0 10px 30px rgba(21, 48, 74, .3); z-index: 2; }
+.settings .sound { margin: 0; padding: 10px 14px; text-align: left; color: var(--ink); font-size: 15px; }
+.logo { text-align: center; position: relative; margin: 2vh 0 auto; max-width: 100%; animation: logoIn .7s cubic-bezier(.2, 1.4, .4, 1) both; }
+.logo .stamp { position: absolute; left: 50%; right: auto; top: -30px; transform: translateX(-50%) rotate(4deg); white-space: nowrap; }
+.logo-title { margin: 0; font-family: var(--display); font-weight: 900; font-size: clamp(30px, 10.2vw, 64px); line-height: 1; letter-spacing: -.02em; color: #fff; transform: rotate(-3deg);
+  -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill;
+  text-shadow: 0 4px 0 var(--ink), 0 7px 0 var(--ink), 0 12px 20px rgba(0, 0, 0, .35); }
+.ribbon { display: inline-block; margin-top: 10px; background: var(--wood); color: #fff; font-family: var(--display); font-weight: 800; font-size: clamp(15px, 4.4vw, 20px);
+  padding: 6px 22px; transform: rotate(-3deg); clip-path: polygon(0 0, 100% 0, 96% 50%, 100% 100%, 0 100%, 4% 50%); text-shadow: 0 2px 0 #b5652a; }
+@keyframes logoIn { from { opacity: 0; transform: scale(.7) translateY(-20px); } }
+.menu-bottom { width: 100%; max-width: 440px; margin-top: auto; display: grid; gap: 12px; padding-bottom: 6px; }
+.world-card { background: rgba(255, 255, 255, .92); border-radius: 16px; padding: 10px 14px; box-shadow: 0 3px 0 rgba(21, 48, 74, .2); }
+.wc-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; }
+.wc-row b { font-family: var(--display); font-size: 14px; } .wc-row span { font-weight: 800; color: #6b8296; font-variant-numeric: tabular-nums; }
+.bar { height: 10px; border-radius: 999px; background: #dbe6ef; margin-top: 7px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--cash), #7bd36b); border-radius: inherit; }
+.play-big { position: relative; display: grid; gap: 0; padding: 14px 16px 12px; border-radius: 22px; background: linear-gradient(180deg, #59c868, var(--cash)); color: #fff;
+  box-shadow: 0 7px 0 #24722f, 0 14px 26px rgba(0, 0, 0, .3); animation: pulse 1.6s ease-in-out infinite; }
+.play-big .pb-main { font-family: var(--display); font-weight: 900; font-size: 30px; letter-spacing: .02em; text-transform: uppercase; text-shadow: 0 3px 0 #24722f; }
+.play-big .pb-sub { font-family: var(--body); font-weight: 800; font-size: 14px; opacity: .92; }
+.play-big:active { transform: translateY(4px); box-shadow: 0 3px 0 #24722f; animation: none; }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+.icon-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.ibtn { display: grid; justify-items: center; gap: 4px; background: none; color: #fff; font-family: var(--body); font-weight: 800; font-size: 12.5px; text-shadow: 0 1px 2px rgba(0, 0, 0, .5); padding: 0; }
+.ibtn .ic { position: relative; width: 58px; height: 58px; border-radius: 18px; background: #fff; color: var(--ink); display: grid; place-items: center; box-shadow: 0 4px 0 #b9cad8, 0 8px 18px rgba(0, 0, 0, .25); }
+.ibtn .ic svg { width: 30px; height: 30px; }
+.ibtn:active .ic { transform: translateY(3px); box-shadow: 0 1px 0 #b9cad8; }
+.badge { position: absolute; top: -6px; right: -6px; min-width: 22px; height: 22px; padding: 0 5px; border-radius: 999px; background: var(--alert); color: #fff; font-style: normal; font-family: var(--display); font-weight: 800; font-size: 12px; display: grid; place-items: center; border: 2px solid #fff; }
+.test-note { text-align: center; font-size: 11px; font-weight: 700; color: rgba(255, 255, 255, .8); }
+@media (prefers-reduced-motion: reduce) { .play-big, .logo { animation: none; } }
 </style>
 
 <div id="game"></div>
 <div id="fx"></div>
+<div id="arrows"></div>
 <div id="flash"></div>
 <div id="hud" hidden>
   <div class="hud-top">
     <div><div class="money" id="money"><span class="bill"></span><span id="moneyV">0</span></div><div class="hearts" id="hearts" aria-label="Здоровье"></div></div>
-    <div class="goal"><div class="lv" id="lvName">Уровень 1</div><div class="gt" id="goalT">Цель</div></div>
+    <div class="goal"><div class="lv" id="lvName">Уровень 1</div><div class="gt" id="goalT">Цель</div><div class="par" id="parT">★ 0:00</div></div>
     <button class="menu-btn" id="menuBtn" aria-label="Меню">II</button>
   </div>
   <div class="hint" id="hint"></div>
+  <div class="tut" id="tut" hidden><small id="tutStep">Шаг 1 из 4</small><span id="tutText"></span></div>
   <div class="cargo" id="cargo">Груз 0/8</div>
+  <button class="boost-btn" id="boostBtn" hidden><b>×2</b><span>деньги на минуту</span><small>реклама</small></button>
   <div class="banner" id="banner">Волк рядом!</div>
+  <div class="goal-card" id="goalCard" role="status"><small id="gcLv">Уровень 1</small><b id="gcName">Построй склад</b><span class="price"><span class="bill"></span><span id="gcCost">0</span></span><p id="gcNote"></p><p class="gc-par" id="gcPar"></p></div>
 </div>
 <div id="joy" hidden><div id="knob"></div></div>
 
-<div class="screen" id="menu">
+<div class="screen menu-screen" id="menu">
+  <div class="menu-top">
+    <div class="pill"><span class="star">★</span><b id="starAll">0</b></div>
+    <button class="round-btn" id="gearBtn" aria-label="Настройки"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm8 3.5-2-1.1.2-2.3-2.2-.9-1-2.1-2.3.6L11 4.5 9.6 6.2l-2.3-.6-1 2.1-2.2.9.2 2.3L2.3 12l2 1.1-.2 2.3 2.2.9 1 2.1 2.3-.6 1.4 1.7 1.7-1.7 2.3.6 1-2.1 2.2-.9-.2-2.3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
+    <div class="settings" id="settings" hidden>
+      <button class="sound" id="musicBtn">Музыка: вкл</button>
+      <button class="sound" id="soundBtn">Звуки: вкл</button>
+    </div>
+  </div>
+  <div class="logo">
+    <h1 class="logo-title">Выживалити</h1>
+    <div class="ribbon">как в рекламе</div>
+  </div>
+  <div class="menu-bottom">
+    <div class="world-card" id="worldCard"><div class="wc-row"><b id="wcName">Мир 1 · Тайга</b><span id="wcCount">0/10</span></div><div class="bar"><i id="wcBar"></i></div></div>
+    <button class="play-big" id="playBtn"><span class="pb-main">Играть</span><span class="pb-sub" id="playSub">Уровень 1</span></button>
+    <div class="icon-row">
+      <button class="ibtn" id="levelsBtn"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z" fill="currentColor" opacity=".25"/><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2zM9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span>Уровни</button>
+      <button class="ibtn" id="shopBtn"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z" fill="currentColor" opacity=".25"/><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8zM9 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><em class="badge" id="starBal" hidden>0</em></span>Магазин</button>
+      <button class="ibtn" id="helpBtn"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="currentColor" opacity=".25"/><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.6v.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17.2" r="1.2" fill="currentColor"/></svg></span>Помощь</button>
+      <button class="ibtn" id="feedbackBtn"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" fill="currentColor" opacity=".25"/><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 9h8M8 12h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>Связь</button>
+    </div>
+    <div class="test-note" id="testNote" hidden>Тестовый режим: все уровни открыты</div>
+  </div>
+</div>
+
+<div class="screen" id="levels" hidden>
   <div class="card">
-    <div class="stamp">реклама = игра</div>
-    <h1 class="title">Как в<br><em>рекламе</em></h1>
-    <p class="tag">Руби лес, таскай груз, строй и не попадайся волкам. Тот самый геймплей из ролика — и больше ничего.</p>
-    <button class="play" id="playBtn">Играть</button>
+    <div class="sheet-head"><button class="back" data-back aria-label="Назад">‹</button><h2>Уровни</h2></div>
     <div class="worlds" id="lvls"></div>
-    <button class="shop-btn" id="shopBtn">Магазин улучшений · <b id="starBal">★ 0</b></button>
-    <button class="sound" id="soundBtn">Звук: вкл</button>
-    <div class="foot">Тяни пальцем по экрану, чтобы идти. На компьютере — WASD или стрелки.</div>
-    <div class="foot" id="testNote" hidden>Тестовый режим: все уровни открыты.</div>
+  </div>
+</div>
+
+<div class="screen" id="help" hidden>
+  <div class="card text-card">
+    <div class="sheet-head"><button class="back" data-back aria-label="Назад">‹</button><h2>Как играть</h2></div>
+    <ol class="steps">
+      <li><b>Собирай.</b> Подойди к ёлкам, камням или тростнику — сырьё само прыгнет в руки. Управление: тяни пальцем по экрану.</li>
+      <li><b>Перерабатывай.</b> Отнеси сырьё на лоток цеха: брёвна — на пилораму, руду — в плавильню. Готовый товар стоит дороже.</li>
+      <li><b>Продавай.</b> Встань на зону «ПРОДАТЬ» у лавки, потом забери деньги с зоны «ДЕНЬГИ».</li>
+      <li><b>Строй.</b> Встань на площадку с ценой и постой — деньги уйдут в стройку. Финальное здание завершает уровень.</li>
+    </ol>
+    <h3>Звери</h3>
+    <p>Волк кусает и отнимает груз, деньги на руках и одно сердце. Лось и як бьют на два сердца, лиса ворует с лотков. Построй костёр, возьми у него факел и подойди к зверю вплотную — он убежит. В кругу у костра безопасно.</p>
+    <h3>Улучшения</h3>
+    <p>Рюкзак, сапоги и ступени цехов покупаются на площадках внутри уровня. Площадка «УЛУЧШИТЬ РАБОТНИКОВ» прокачивает сразу всех нанятых работников: они бегают быстрее, носят больше, у них больше сердец, а на последней ступени — факелы. Её можно покупать несколько раз. Новые ступени открываются с прохождением игры.</p>
+    <h3>Звёзды и магазин</h3>
+    <p>За уровень дают до трёх звёзд: построил, обошёлся без укусов, уложился во время. Звёзды тратятся в магазине на бонусы, которые действуют на всех уровнях.</p>
+    <h3>Вопросы</h3>
+    <p><b>Где мой прогресс?</b> Он хранится на этом устройстве. Если удалить игру или очистить данные, прогресс пропадёт.</p>
+    <p><b>Застрял на уровне?</b> Купи улучшения в магазине за звёзды и переиграй прошлые уровни на три звезды.</p>
+    <h3>Авторы</h3>
+    <p>Музыка: Kevin MacLeod (incompetech.com), композиции «Easy Lemon» и «Run Amok», лицензия CC BY 4.0. 3D-модели: Quaternius, Kenney, Kay Lousberg (CC0).</p>
+  </div>
+</div>
+
+<div class="screen" id="feedback" hidden>
+  <div class="card text-card">
+    <div class="sheet-head"><button class="back" data-back aria-label="Назад">‹</button><h2>Связь с нами</h2></div>
+    <p>Нашли ошибку, есть идея или просто понравилось? Напишите нам — читаем всё.</p>
+    <div class="contact" id="contactList"></div>
+    <p class="foot">Версия игры: <span id="gameVersion"></span></p>
   </div>
 </div>
 
@@ -186,6 +334,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
       <div><b id="stTime">0:00</b><span>время</span></div>
       <div><b id="stEarn">$0</b><span>заработано</span></div>
     </div>
+    <button class="play revive" id="reviveBtn" hidden>Продолжить · 1 ♥<small>за просмотр рекламы</small></button>
     <button class="play" id="nextBtn">Дальше</button>
     <button class="sound" id="toMenuBtn">В меню</button>
   </div>
@@ -219,6 +368,14 @@ const ITEM = {
   reed:  { val: 2,  step: .2,  name: 'ТРОСТНИК' },
   basket:{ val: 7,  step: .3,  name: 'КОРЗИНЫ' },
   crate: { val: 14, step: .4,  name: 'КОРОБА' },
+  ore:   { val: 4,  step: .34, name: 'РУДА' },
+  ingot: { val: 12, step: .16, name: 'СЛИТКИ' },
+  tools: { val: 24, step: .2,  name: 'ИНСТРУМЕНТ' },
+  wheat: { val: 3,  step: .26, name: 'ПШЕНИЦА' },
+  flour: { val: 8,  step: .32, name: 'МУКА' },
+  bread: { val: 15, step: .22, name: 'ХЛЕБ' },
+  pie:   { val: 28, step: .16, name: 'ПИРОГИ' },
+  milk:  { val: 5,  step: .36, name: 'МОЛОКО' },
   cash:  { val: 0,  step: .08 },
 };
 const SRC = {
@@ -226,12 +383,16 @@ const SRC = {
   rock: { item: 'stone', hp: 6, regrow: 6 },
   hole: { item: 'fish',  hp: 7, regrow: 4 },
   reed: { item: 'reed',  hp: 5, regrow: 4 },
+  ore:  { item: 'ore',   hp: 6, regrow: 6 },
+  wheat:{ item: 'wheat', hp: 4, regrow: 9 },
 };
 const CONV = {
   saw:   { in: 'log',   out: 'plank', time: .55, label: 'ПИЛОРАМА',  color: 0x3d87d6, tiers: ['plank', 'beam', 'furn'] },
   kiln:  { in: 'stone', out: 'brick', time: .65, label: 'ПЕЧЬ',      color: 0xd8683f, tiers: ['brick', 'tile', 'mosaic'] },
   grill: { in: 'fish',  out: 'meal',  time: .65, label: 'КОПТИЛЬНЯ', color: 0x8a66cf, tiers: ['meal', 'snack', 'deli'] },
   weave: { in: 'reed',  out: 'basket', time: .5, label: 'ПЛЕТЕЛЬНЯ', color: 0x9b7a3a, tiers: ['basket', 'crate'] },
+  smelt: { in: 'ore',   out: 'ingot', time: .6, label: 'ПЛАВИЛЬНЯ', color: 0x5b5f6b, tiers: ['ingot', 'tools'] },
+  mill:  { in: 'wheat', out: 'flour', time: .5, label: 'МЕЛЬНИЦА',  color: 0xd9b46a, tiers: ['flour', 'bread', 'pie'] },
 };
 
 const LEVELS = window.KVR_LEVELS, WORLDS = window.KVR_WORLDS;
@@ -247,7 +408,9 @@ let muted = store.get('kvr_muted', false);
 // Звёзды: лучший результат по каждому уровню. Бонусы покупаются за звёзды и действуют на всех уровнях
 let bestStars = store.get('kvr_stars', {});
 let perks = store.get('kvr_perks', {});
-const PAR_TIME = 180;
+// Звезда за скорость: у каждого уровня своё время (par в levels.js — время бота ×1.5)
+const parTime = L => (L && L.par) || 180;
+const mmss = t => { const s = Math.max(0, Math.round(t)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
 const PERKS = [
   { id: 'cash', name: 'Стартовый капитал', costs: [3, 6, 12], desc: l => `Начинаешь уровень с $${[30, 80, 200][l]}`, val: l => [0, 30, 80, 200][l] },
   { id: 'heart', name: 'Четвёртое сердце', costs: [10], desc: () => 'Четыре сердца вместо трёх' },
@@ -262,17 +425,112 @@ const starsSpent = () => PERKS.reduce((sum, p) => sum + p.costs.slice(0, perkLvl
 const starsLeft = () => starsTotal() - starsSpent();
 
 // ---------- Звук ----------
-let AC = null;
-function initAudio() { if (AC) return; try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+// Всё синтезируется на лету (WebAudio): два слоя музыки — спокойный и тревожный — играют синхронно,
+// а громкость переходит между ними, когда на участке появляется опасность. Эффекты идут по своей шине.
+let AC = null, master = null, sfxBus = null, musicBus = null, noiseBuf = null;
+let musicOn = store.get('kvr_music', true);
+function initAudio() {
+  if (AC) { if (AC.state === 'suspended') AC.resume(); return; }
+  try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
+  master = AC.createGain(); master.gain.value = .9;
+  const comp = AC.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 3;
+  master.connect(comp).connect(AC.destination);
+  sfxBus = AC.createGain(); sfxBus.gain.value = muted ? 0 : 1; sfxBus.connect(master);
+  musicBus = AC.createGain(); musicBus.gain.value = musicOn ? .55 : 0; musicBus.connect(master);
+  noiseBuf = AC.createBuffer(1, AC.sampleRate, AC.sampleRate);
+  const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  Music.start();
+}
+addEventListener('pointerdown', () => initAudio(), { once: true });
+document.addEventListener('visibilitychange', () => { if (!AC) return; document.hidden ? AC.suspend() : AC.resume(); });
+const midi = n => 440 * Math.pow(2, (n - 69) / 12);
+function tone(bus, f, t, d, { type = 'sine', v = .05, a = .005, f2 = null, lp = null, q = .7 } = {}) {
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = type; o.frequency.setValueAtTime(f, t);
+  if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d);
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(v, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+  let node = o.connect(g);
+  if (lp) { const fl = AC.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.value = lp; fl.Q.value = q; node = node.connect(fl); }
+  node.connect(bus); o.start(t); o.stop(t + d + .05);
+}
+function noise(bus, t, d, { v = .05, type = 'highpass', f = 3000, f2 = null, q = .8, a = .003 } = {}) {
+  const src = AC.createBufferSource(), fl = AC.createBiquadFilter(), g = AC.createGain();
+  src.buffer = noiseBuf; fl.type = type; fl.frequency.setValueAtTime(f, t); fl.Q.value = q;
+  if (f2) fl.frequency.exponentialRampToValueAtTime(f2, t + d);
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(v, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+  src.connect(fl).connect(g).connect(bus); src.start(t, Math.random() * .5); src.stop(t + d + .05);
+}
 function beep(f = 600, d = .06, type = 'sine', v = .05) {
   if (!AC || muted) return;
-  const t = AC.currentTime, o = AC.createOscillator(), g = AC.createGain();
-  o.type = type; o.frequency.setValueAtTime(f, t);
-  g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.0001, t + d);
-  o.connect(g).connect(AC.destination); o.start(t); o.stop(t + d + .02);
+  tone(sfxBus, f, AC.currentTime, d, { type, v });
 }
+
+// Эффекты событий
+const SFX = {
+  ok: () => AC && !muted,
+  pop(n) { if (!this.ok()) return; const t = AC.currentTime, f = 520 + Math.min(n, 24) * 22; tone(sfxBus, f, t, .09, { type: 'triangle', v: .05, f2: f * 1.5 }); },
+  cash() { if (!this.ok()) return; const t = AC.currentTime; tone(sfxBus, 1568, t, .25, { v: .05 }); tone(sfxBus, 2093, t + .06, .35, { v: .045 }); noise(sfxBus, t, .08, { v: .02, f: 7000 }); },
+  coin() { if (!this.ok()) return; tone(sfxBus, 1760, AC.currentTime, .12, { v: .03, type: 'triangle' }); },
+  build() {
+    if (!this.ok()) return; const t = AC.currentTime;
+    [60, 64, 67, 72].forEach((n, i) => tone(sfxBus, midi(n), t + i * .07, .35, { type: 'triangle', v: .07 }));
+    tone(sfxBus, midi(48), t, .5, { v: .08 }); noise(sfxBus, t, .45, { v: .04, type: 'bandpass', f: 600, f2: 4000, q: 1.2 });
+  },
+  howl(kind) {
+    if (!this.ok()) return; const t = AC.currentTime;
+    if (kind === 'fox') { [0, .14, .28].forEach(k => tone(sfxBus, 980, t + k, .1, { type: 'square', v: .025, f2: 1300, lp: 2500 })); return; }
+    if (kind === 'moose' || kind === 'yak') { tone(sfxBus, 140, t, 1.1, { type: 'sawtooth', v: .07, f2: 85, lp: 700, a: .15 }); return; }
+    const o = AC.createOscillator(), g = AC.createGain(), lfo = AC.createOscillator(), lg = AC.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(380, t); o.frequency.linearRampToValueAtTime(720, t + .5); o.frequency.linearRampToValueAtTime(560, t + 1.5);
+    lfo.frequency.value = 6; lg.gain.value = 12; lfo.connect(lg).connect(o.frequency);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.06, t + .3); g.gain.exponentialRampToValueAtTime(.0001, t + 1.6);
+    o.connect(g).connect(sfxBus); o.start(t); lfo.start(t); o.stop(t + 1.7); lfo.stop(t + 1.7);
+  },
+  growl() { if (!this.ok()) return; tone(sfxBus, 95, AC.currentTime, .35, { type: 'sawtooth', v: .05, f2: 70, lp: 500 }); },
+  bite() { if (!this.ok()) return; const t = AC.currentTime; noise(sfxBus, t, .18, { v: .12, type: 'lowpass', f: 1200 }); tone(sfxBus, 110, t, .3, { v: .12, f2: 50 }); },
+  torch() { if (!this.ok()) return; noise(sfxBus, AC.currentTime, .5, { v: .06, type: 'bandpass', f: 300, f2: 2400, q: 1.5, a: .05 }); },
+  scare() { if (!this.ok()) return; const t = AC.currentTime; noise(sfxBus, t, .3, { v: .07, type: 'bandpass', f: 800, f2: 3000, q: 1 }); tone(sfxBus, 330, t, .2, { type: 'square', v: .03, f2: 660, lp: 2000 }); },
+  steal() { if (!this.ok()) return; const t = AC.currentTime; [0, .08, .16].forEach((k, i) => tone(sfxBus, 880 - i * 160, t + k, .1, { type: 'triangle', v: .04 })); },
+  wind() { if (!this.ok()) return; noise(sfxBus, AC.currentTime, 3, { v: .05, type: 'bandpass', f: 400, f2: 900, q: .6, a: .8 }); },
+  death() { if (!this.ok()) return; const t = AC.currentTime; tone(sfxBus, 300, t, .7, { type: 'triangle', v: .06, f2: 90 }); },
+  win() {
+    if (!this.ok()) return; const t = AC.currentTime;
+    [[60, 0], [64, .12], [67, .24], [72, .36], [76, .5], [79, .62]].forEach(([n, k]) => tone(sfxBus, midi(n), t + k, .5, { type: 'triangle', v: .07 }));
+    [48, 55, 64].forEach(n => tone(sfxBus, midi(n), t + .62, 1.2, { v: .05, a: .05 }));
+  },
+  lose() { if (!this.ok()) return; const t = AC.currentTime; [[67, 0], [63, .25], [60, .5], [55, .8]].forEach(([n, k]) => tone(sfxBus, midi(n), t + k, .6, { type: 'triangle', v: .06 })); },
+  ui() { if (!this.ok()) return; tone(sfxBus, 990, AC.currentTime, .06, { type: 'triangle', v: .035 }); },
+};
+
+// Музыка: два трека (Kevin MacLeod, incompetech.com, CC BY 4.0) играют по кругу одновременно,
+// слышен тот, что нужен сейчас: спокойный — когда всё тихо, тревожный — когда рядом зверь
+const Music = {
+  danger: 0, inMenu: undefined, calm: null, tense: null,
+  tracks: { calm: { url: 'music/calm.mp3', loop: [0, 124.4] }, tense: { url: 'music/danger.mp3', loop: [.82, 104] } },
+  start() {
+    this.calm = AC.createGain(); this.calm.gain.value = .0001; this.calm.connect(musicBus);
+    this.tense = AC.createGain(); this.tense.gain.value = 0; this.tense.connect(musicBus);
+    for (const [k, tr] of Object.entries(this.tracks)) {
+      fetch(tr.url).then(r => r.arrayBuffer()).then(b => new Promise((res, rej) => AC.decodeAudioData(b, res, rej))).then(buf => {
+        const src = AC.createBufferSource(); src.buffer = buf; src.loop = true;
+        src.loopStart = tr.loop[0]; src.loopEnd = Math.min(tr.loop[1], buf.duration);
+        src.connect(k === 'calm' ? this.calm : this.tense); src.start(0, tr.loop[0]);
+        if (k === 'calm') this.calm.gain.setTargetAtTime(this.danger ? 0 : (this.inMenu ? .6 : .85), AC.currentTime, .8);
+      }).catch(() => {});
+    }
+  },
+  setDanger(on, inMenu) {
+    if (!AC || !this.calm) return;
+    const want = on ? 1 : 0;
+    if (want === this.danger && this.inMenu === inMenu) return;
+    this.danger = want; this.inMenu = inMenu;
+    const t = AC.currentTime;
+    this.calm.gain.setTargetAtTime(on ? 0 : (inMenu ? .6 : .85), t, on ? .35 : .9);
+    this.tense.gain.setTargetAtTime(on ? .9 : 0, t, on ? .2 : 1.1);
+  },
+};
 let lastBeep = 0;
-function tick(f) { const n = performance.now(); if (n - lastBeep < 45) return; lastBeep = n; beep(f, .05, 'triangle', .04); }
+function tick(f) { const n = performance.now(); if (n - lastBeep < 45) return; lastBeep = n; if (f >= 700) SFX.coin(); else SFX.pop((f - 420) / 25); }
 
 // ---------- Рендер ----------
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -319,13 +577,23 @@ const GEO = {
   reed: new THREE.CylinderGeometry(.14, .14, .85, 8).rotateZ(PI / 2),
   basket: new THREE.CylinderGeometry(.24, .17, .28, 10),
   crate: new THREE.BoxGeometry(.55, .38, .45),
+  ore: new THREE.DodecahedronGeometry(.2),
+  ingot: new THREE.BoxGeometry(.5, .14, .24),
+  tools: new THREE.BoxGeometry(.8, .1, .16),
+  wheat: new THREE.CylinderGeometry(.14, .1, .8, 8).rotateZ(PI / 2),
+  flour: new THREE.SphereGeometry(.2, 10, 8).scale(1.3, 1.2, 1),
+  bread: new THREE.SphereGeometry(.2, 10, 8).scale(1.7, .85, 1),
+  pie: new THREE.CylinderGeometry(.26, .24, .12, 14),
+  milk: new THREE.CylinderGeometry(.15, .17, .34, 12),
   cash: new THREE.BoxGeometry(.55, .07, .28),
 };
 const ITEM_COLOR = { log: 0xc5713a, plank: 0xeab877, stone: 0x97a1ac, brick: 0xc24f3a, fish: 0x6f96b5, meal: 0xf2a230, cash: 0x3aa64c,
   beam: 0xa8693a, furn: 0x7b4a2a, tile: 0xd9774a, mosaic: 0x3aa6b9, snack: 0x5fae5f, deli: 0xffd23f,
-  reed: 0x9bb54a, basket: 0xc08a4a, crate: 0xb5653a };
+  reed: 0x9bb54a, basket: 0xc08a4a, crate: 0xb5653a,
+  ore: 0x6b5a52, ingot: 0xc9a14a, tools: 0x7d8794, wheat: 0xe8c45a, flour: 0xf1e6cf, bread: 0xc98a3e, pie: 0xe39b3c, milk: 0xf4f7fb };
 // Предметы в руках: где есть 3D-модель — она (подогнана по длине, шаг стопки берётся из её высоты), иначе простая фигура
-const ITEM_MODEL = { log: ['item_log', .85], plank: ['item_plank', .9], fish: ['item_fish', .8], crate: ['item_box', .55] };
+const ITEM_MODEL = { log: ['item_log', .85], plank: ['item_plank', .9], fish: ['item_fish', .8], crate: ['item_box', .55],
+  ingot: ['item_ingot', .55], tools: ['item_tools', .8], bread: ['item_bread', .55], flour: ['item_flour', .5] };
 const itemTpl = {};
 function itemTemplate(kind) {
   if (itemTpl[kind]) return itemTpl[kind];
@@ -370,16 +638,18 @@ function zoneMark(text, color = '#ffffff') {
   const cv = canvasTex(256, 200), { ctx } = cv;
   rr(ctx, 10, 10, 236, 180, 24); ctx.fillStyle = 'rgba(70,45,28,.28)'; ctx.fill();
   ctx.setLineDash([18, 12]); ctx.lineWidth = 7; ctx.strokeStyle = color; rr(ctx, 10, 10, 236, 180, 24); ctx.stroke();
-  ctx.setLineDash([]); ctx.fillStyle = color; ctx.textAlign = 'center'; fitFont(ctx, text, 800, 30, 200); ctx.fillText(text, 128, 172);
+  ctx.setLineDash([]); fitFont(ctx, text, 800, 42, 214);
+  const tw = ctx.measureText(text).width; rr(ctx, 128 - tw / 2 - 10, 140, tw + 20, 46, 12); ctx.fillStyle = 'rgba(40,28,18,.55)'; ctx.fill();
+  ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(text, 128, 164);
   cv.tex.needsUpdate = true;
   return flatPlane(cv.tex, 1.9, 1.5);
 }
 function signBoard(text, bg) {
-  const cv = canvasTex(256, 72), { ctx } = cv;
-  rr(ctx, 4, 4, 248, 64, 14); ctx.fillStyle = bg; ctx.fill();
-  ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; fitFont(ctx, text, 800, 30, 220); ctx.fillText(text, 128, 38);
+  const cv = canvasTex(384, 108), { ctx } = cv;
+  rr(ctx, 6, 6, 372, 96, 20); ctx.fillStyle = bg; ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; fitFont(ctx, text, 800, 46, 340); ctx.fillText(text, 192, 57);
   cv.tex.needsUpdate = true;
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(1.9, .53), new THREE.MeshBasicMaterial({ map: cv.tex, transparent: true }));
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(2.85, .8), new THREE.MeshBasicMaterial({ map: cv.tex, transparent: true }));
   return m;
 }
 
@@ -388,7 +658,7 @@ function signBoard(text, bg) {
 const COMMON_ASSETS = ['player', 'helper', 'wolf', 'pine', 'rock', 'bonfire', 'market', 'fence', 'item_log', 'item_plank', 'item_fish'];
 const worldOf = i => Math.floor(i / 10);
 const worldAssets = i => (WORLDS[worldOf(i)] && WORLDS[worldOf(i)].models) || [];
-const CONV_MODEL = { saw: 'sawmill', kiln: 'kiln', grill: 'grill', weave: 'weaver' };
+const CONV_MODEL = { saw: 'sawmill', kiln: 'kiln', grill: 'grill', weave: 'weaver', smelt: 'kiln', mill: 'mill' };
 const ASSETS = {};
 const assetTried = new Set();
 const missingAssets = names => names.filter(n => !assetTried.has(n));
@@ -458,24 +728,31 @@ function play(rig, k, fade = .18) {
   rig.cur = k;
 }
 function makeCharModel(kind, scale) {
-  const g = new THREE.Group(), m = model(kind, 1.75);
+  const g = new THREE.Group(), m = model(kind, 2.1);
   g.add(m);
   const rig = makeRig(m.children[0], ASSETS[kind], { idle: ['Idle_Neutral', 'Man_Idle', '|Idle'], run: ['|Run', 'Man_Run'],
     work: ['|Interact', 'Man_Punch'], hit: ['|HitRecieve'], death: ['|Death', 'Man_Death'], wave: ['|Wave', 'Man_Clapping'] });
   play(rig, 'idle', 0);
-  const holder = new THREE.Group(); holder.position.set(0, .9, .42); g.add(holder);
+  const holder = new THREE.Group(); holder.position.set(0, 1.05, .48); g.add(holder);
   g.scale.setScalar(scale);
   return { g, holder, rig, phase: 0 };
 }
+function makeBeastModel(name, h) {
+  const g = new THREE.Group(), m = model(name, h);
+  g.add(m);
+  const rig = makeRig(m.children[0], ASSETS[name], { walk: ['Walk'], run: ['Gallop'], jump: ['Gallop_Jump'], idle: ['Idle'] });
+  play(rig, 'walk', 0);
+  return { g, legs: [], rig, phase: 0 };
+}
 function makeMooseModel() {
-  const g = new THREE.Group(), m = model('moose', 1.9);
+  const g = new THREE.Group(), m = model('moose', 2.25);
   g.add(m);
   const rig = makeRig(m.children[0], ASSETS.moose, { walk: ['Walk'], run: ['Gallop'], jump: ['Gallop_Jump'], idle: ['Idle'] });
   play(rig, 'walk', 0);
   return { g, legs: [], rig, phase: 0 };
 }
 function makeWolfModel() {
-  const g = new THREE.Group(), m = model('wolf', 1.0);
+  const g = new THREE.Group(), m = model('wolf', 1.2);
   g.add(m);
   const rig = makeRig(m.children[0], ASSETS.wolf, { walk: ['Walk'], run: ['Gallop'], jump: ['Gallop_Jump'], idle: ['Idle'] });
   play(rig, 'walk', 0);
@@ -521,6 +798,8 @@ function animWalk(ch, moving, dt, spd) {
 }
 function makeWolf(kind) {
   if (kind === 'moose' && ASSETS.moose) return makeMooseModel();
+  if (kind === 'yak' && ASSETS.yak) return makeBeastModel('yak', 1.9);
+  if (kind === 'fox' && ASSETS.fox) return makeBeastModel('fox', .9);
   if (ASSETS.wolf) return makeWolfModel();
   const g = new THREE.Group(), grey = 0x737d89;
   const body = mesh(new THREE.BoxGeometry(.46, .38, .95), grey); body.position.y = .52;
@@ -546,6 +825,15 @@ function makeSourceModel(t) {
   } else if (t === 'rock' && ASSETS.rock) {
     crown.add(model('rock', 1.5, 'w'));
     stump = mesh(new THREE.DodecahedronGeometry(.2), 0x8f99a5); stump.position.y = .1;
+  } else if (t === 'ore') {
+    if (ASSETS.ore_rock) crown.add(model('ore_rock', 1.5, 'w'));
+    else [[.5, 0, 0, .4], [.38, .4, .3, .3], [.32, -.35, .25, .28]].forEach(([r, x, z, y]) => { const s = mesh(new THREE.DodecahedronGeometry(r), 0x5d5450); s.position.set(x, y, z); crown.add(s); });
+    [[.15, .55, .2], [-.25, .45, .3], [.3, .3, -.3], [-.1, .7, -.1]].forEach(([x, y, z]) => { const c = new THREE.Mesh(new THREE.OctahedronGeometry(.11), new THREE.MeshBasicMaterial({ color: 0xffa23a })); c.position.set(x, y, z); crown.add(c); });
+    stump = mesh(new THREE.DodecahedronGeometry(.2), 0x5d5450); stump.position.y = .1;
+  } else if (t === 'wheat') {
+    if (ASSETS.wheat) crown.add(model('wheat', rnd(1.0, 1.2)));
+    else for (let i = 0; i < 9; i++) { const c = mesh(new THREE.CylinderGeometry(.03, .03, 1), 0xe0b94e); c.position.set(rnd(-.35, .35), .5, rnd(-.35, .35)); const ear = mesh(new THREE.SphereGeometry(.07, 6, 5).scale(1, 2, 1), 0xf0cf62); ear.position.set(c.position.x, 1.02, c.position.z); crown.add(c, ear); }
+    stump = mesh(new THREE.CylinderGeometry(.45, .5, .05, 10), 0x9b7f45); stump.position.y = .03;
   } else if (t === 'reed') {
     if (ASSETS.reeds) crown.add(model('reeds', rnd(1.2, 1.5)));
     else for (let i = 0; i < 7; i++) { const c = mesh(new THREE.CylinderGeometry(.03, .04, 1.3), 0x7aa53a); c.position.set(rnd(-.3, .3), .65, rnd(-.3, .3)); c.rotation.z = rnd(-.15, .15); crown.add(c); }
@@ -767,7 +1055,7 @@ const UNLOCK = {
 };
 const unlockAt = (kind, tier) => UNLOCK[kind][tier - 1] ?? Infinity;
 const isOpen = (kind, tier) => G.lvl + 1 >= unlockAt(kind, tier);
-const NEW_NAMES = { conv: 'цеха', cap: 'рюкзак', speed: 'сапоги', crew: 'бригада' };
+const NEW_NAMES = { conv: 'цеха', cap: 'рюкзак', speed: 'сапоги', crew: 'улучшение работников' };
 const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V'];
 const CAP_STEPS = [4, 4, 8, 8];                  // рюкзак: +4, +4, +8, +8
 const CAP_MULT = [1, 2, 3.5, 6];
@@ -813,7 +1101,7 @@ function resetState() {
   Object.assign(G, {
     lvl: 0, L: null, money: 0, earned: 0, cap: 8, speed: 5.5, time: 0, running: false, won: false,
     sources: [], convs: [], markets: [], pads: [], helpers: [], wolves: [], fires: [], colliders: [], byId: {},
-    wolfT: 0, xT: 0, hT: 0, inv: 0, torch: 0, stun: 0, padT: 0, puffT: 0, hp: 3, maxHp: 3, torchMax: 15, crew: 1, dying: [], docks: [], openZones: new Set(), mooseT: 0, boss: null, bossSpawned: false, bossBeaten: false, lost: false, drops: [], bitten: false, lostWorker: false,
+    wolfT: 0, xT: 0, hT: 0, inv: 0, torch: 0, stun: 0, padT: 0, puffT: 0, hp: 3, maxHp: 3, torchMax: 15, crew: 1, boostT: 0, dying: [], docks: [], carts: [], cows: [], storm: 0, stormT: 0, waterMult: 1, openZones: new Set(), mooseT: 0, boss: null, bossSpawned: false, bossBeaten: false, lost: false, drops: [], bitten: false, lostWorker: false,
   });
 }
 resetState();
@@ -831,7 +1119,9 @@ function buildStatic(L) {
   const hw = L.w / 2, hh = L.h / 2;
   const snow = new THREE.Mesh(new THREE.PlaneGeometry(220, 220), M(0xeaf2f8));
   snow.rotation.x = -PI / 2; snow.receiveShadow = true; world.add(snow);
-  const floor = new THREE.Mesh(new THREE.PlaneGeometry(L.w + .8, L.h + .8), M(0xd9a273));
+  const theme = WORLDS[worldOf(G.lvl)] || {};
+  if (theme.ground) snow.material = M(theme.ground);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(L.w + .8, L.h + .8), M(theme.floor || 0xd9a273));
   floor.rotation.x = -PI / 2; floor.position.y = .01; floor.receiveShadow = true; world.add(floor);
   // вода: по ней не пройти, пока не построен мост (участок с id — место под мост)
   (L.water || []).forEach(w => {
@@ -902,7 +1192,7 @@ function spawn(spec, at, pop) {
     md.g.position.set(x, 0, z); md.g.rotation.y = rnd(0, PI * 2); world.add(md.g);
     e = { type: 'src', t: spec.t, item: d.item, hp: d.hp, max: d.hp, regrowT: 0, dead: false, shake: 0, md, pos: new THREE.Vector3(x, 0, z) };
     G.sources.push(e);
-    if (spec.t !== 'hole' && spec.t !== 'reed') addCollider(x, z, .35, .35);
+    if (!['hole', 'reed', 'wheat'].includes(spec.t)) addCollider(x, z, .35, .35);
     e.zone = spec.zone;
     if (pop) popIn(md.g);
   } else if (spec.t === 'market') {
@@ -932,7 +1222,7 @@ function spawn(spec, at, pop) {
     G.fires.push(e); addCollider(x, z, .45, .45);
     if (pop) popIn(md.g);
   } else if (spec.t === 'helper') {
-    const ch = makeChar(0xf08a2c, 0x3aa64c, .85, 'helper'); ch.g.position.set(x, 0, z); world.add(ch.g);
+    const ch = makeChar(0xf08a2c, 0x3aa64c, .9, 'helper'); ch.g.position.set(x, 0, z); world.add(ch.g);
     e = { type: 'helper', spec, ch, pos: ch.g.position, stack: new Stack(ch.holder), cap: CREW[G.crew - 1].cap, deliver: false, t: 0, wait: 0, stun: 0, hp: CREW[G.crew - 1].hp, maxHp: CREW[G.crew - 1].hp, hearts: null };
     G.helpers.push(e); helperHearts(e); if (CREW[G.crew - 1].torch) giveTorch(e);
     if (pop) popIn(ch.g);
@@ -963,6 +1253,44 @@ function spawn(spec, at, pop) {
     e = { type: 'dock', g, boatG, setBoat, outZ, outStack: new Stack(t2, TRAY, 8), rate: spec.rate || 1.6, t: 0, pos: new THREE.Vector3(x, 0, z), d: { in: null } };
     G.docks.push(e);
     if (pop) popIn(g);
+  } else if (spec.t === 'mine' || spec.t === 'farm') {
+    // шахта даёт руду, ферма — молоко: складывают на лоток сами
+    const kind = spec.t === 'mine' ? { item: 'ore', label: 'РУДА', model: 'mine', size: 3.2 } : { item: 'milk', label: 'МОЛОКО', model: 'barn_small', size: 3 };
+    const g = new THREE.Group(); g.position.set(x, 0, z); world.add(g);
+    if (ASSETS[kind.model]) { const m = model(kind.model, kind.size, 'w'); m.position.z = -1.3; g.add(m); }
+    else { const b = mesh(new THREE.BoxGeometry(2.6, 1.6, 1.6), spec.t === 'mine' ? 0x55595f : 0xa8443a); b.position.set(0, .8, -1.3); g.add(b); }
+    const animG = new THREE.Group(); g.add(animG);
+    if (spec.t === 'farm') for (const [cx, cz] of [[-1.6, -.2], [1.7, -.4]]) {
+      const cow = ASSETS.cow ? makeBeastModel('cow', 1.2) : null;
+      if (cow) { cow.g.position.set(cx, 0, cz); cow.g.rotation.y = rnd(0, PI * 2); play(cow.rig, 'idle', 0); animG.add(cow.g); G.cows.push(cow); }
+    }
+    const outZ = new THREE.Vector3(x, 0, z + 1.2);
+    const mk = zoneMark(kind.label, '#ffe9a8'); mk.position.set(outZ.x, .02, outZ.z); world.add(mk);
+    const t2 = new THREE.Group(); t2.position.set(outZ.x, .05, outZ.z - .1); world.add(t2);
+    e = { type: 'dock', item: kind.item, g, boatG: animG, setBoat: () => {}, outZ, outStack: new Stack(t2, TRAY, 8), rate: spec.rate || (spec.t === 'mine' ? 1.8 : 2.2), t: 0, pos: new THREE.Vector3(x, 0, z), d: { in: null }, still: true };
+    G.docks.push(e); addCollider(x, z - 1.3, 1.4, .9);
+    if (pop) popIn(g);
+  } else if (spec.t === 'cart') {
+    // вагонетка по рельсам возит груз с лотка шахты прямо в цех
+    const from = G.byId[spec.from], to = G.byId[spec.to];
+    const a = from.outZ.clone().setZ(from.outZ.z + .9), b = to.inZ.clone().setZ(to.inZ.z + 1.2);
+    const len = a.distanceTo(b), ang = Math.atan2(b.x - a.x, b.z - a.z), mid = a.clone().lerp(b, .5);
+    const rails = new THREE.Group(); rails.position.copy(mid); rails.rotation.y = ang; world.add(rails);
+    [-.28, .28].forEach(o => { const r = mesh(new THREE.BoxGeometry(.06, .06, len), 0x6d7480); r.position.set(o, .05, 0); rails.add(r); });
+    for (let k = -len / 2; k < len / 2; k += .6) { const sl = mesh(new THREE.BoxGeometry(.8, .04, .14), 0x7a5232); sl.position.set(0, .02, k); rails.add(sl); }
+    const cart = new THREE.Group(); cart.position.copy(a); cart.rotation.y = ang; world.add(cart);
+    if (ASSETS.minecart) cart.add(model('minecart', 1.0, 'w'));
+    else { const box = mesh(new THREE.BoxGeometry(.7, .45, .9), 0x5b5f6b); box.position.y = .35; cart.add(box); }
+    const hold = new THREE.Group(); hold.position.y = .6; cart.add(hold);
+    e = { type: 'cart', from, to, a, b, cart, stack: new Stack(hold, [[0, 0]], 99), state: 'load', t: 0, k: 0 };
+    G.carts.push(e);
+    if (pop) popIn(rails);
+  } else if (spec.t === 'decor') {
+    const g = new THREE.Group(); g.position.set(x, 0, z); world.add(g);
+    if (ASSETS[spec.model]) g.add(model(spec.model, spec.size || 1.8, 'w'));
+    else { const b = mesh(new THREE.CylinderGeometry(.7, .8, .8, 12), 0x8f99a5); b.position.y = .4; g.add(b); }
+    addCollider(x, z, .7, .7); e = { type: 'decor', g };
+    if (pop) popIn(g);
   } else if (spec.t === 'monument') {
     const g = makeMonument(G.L.color, spec.label); g.position.set(x, 0, z); world.add(g);
     e = { type: 'monument', g }; addCollider(x, z, 1.75, 1.75);
@@ -980,7 +1308,7 @@ function drawPad(p) {
     rr(ctx, 14, 14, 228, 228, 28); ctx.fillStyle = 'rgba(40,52,66,.42)'; ctx.fill();
     ctx.setLineDash([16, 12]); ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(255,255,255,.55)'; rr(ctx, 14, 14, 228, 228, 28); ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-    fitFont(ctx, p.label, 800, 26, 196); ctx.fillText(p.label, 128, 74);
+    const ll = p.label.split('\n'); fitFont(ctx, ll.reduce((a, b) => a.length > b.length ? a : b), 800, 24, 200); ll.forEach((t, i) => ctx.fillText(t, 128, 58 + i * 28 - (ll.length - 1) * 10));
     ctx.lineWidth = 9; ctx.strokeStyle = 'rgba(255,255,255,.85)';
     ctx.beginPath(); ctx.arc(128, 116, 17, PI, 0); ctx.stroke();
     rr(ctx, 100, 114, 56, 44, 8); ctx.fill();
@@ -1000,7 +1328,9 @@ function drawPad(p) {
   ctx.moveTo(a + L, b); ctx.lineTo(a, b); ctx.lineTo(a, b - L);
   ctx.stroke();
   ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-  fitFont(ctx, p.label, 800, 30, 196); ctx.fillText(p.label, 128, 96);
+  const ln = p.label.split('\n');
+  if (ln.length > 1) { fitFont(ctx, ln.reduce((a, b) => a.length > b.length ? a : b), 800, 26, 200); ctx.fillText(ln[0], 128, 70); ctx.fillText(ln[1], 128, 100); }
+  else { fitFont(ctx, p.label, 800, 30, 196); ctx.fillText(p.label, 128, 96); }
   ctx.fillStyle = p.aff ? '#ffd23f' : '#ffffff';
   fitFont(ctx, '$' + (p.cost - p.paid), 900, 60, 200); ctx.fillText('$' + (p.cost - p.paid), 128, 176);
   if (p.goal) { ctx.fillStyle = '#ffd23f'; ctx.font = '800 20px Unbounded, sans-serif'; ctx.fillText('ЦЕЛЬ', 128, 222); }
@@ -1049,7 +1379,7 @@ function addCrewPad() {
   const first = G.pads.find(p => (p.builds || []).some(b => b.t === 'helper'));
   if (!first) return;
   const spot = freeSpot(first.x, first.z, 2.7); if (!spot) return;
-  const p = makePad({ id: 'crew', cost: round5(goalCost() * CREW_COST[0]), x: spot[0], z: spot[1], label: 'БРИГАДА II', req: first.id, effect: 'crew' });
+  const p = makePad({ id: 'crew', cost: round5(goalCost() * CREW_COST[0]), x: spot[0], z: spot[1], label: 'УЛУЧШИТЬ\nРАБОТНИКОВ', req: first.id, effect: 'crew' });
   p.tier = 1;
   if (!isOpen('crew', 2)) { p.lockedAt = unlockAt('crew', 2); drawPad(p); }
 }
@@ -1075,12 +1405,13 @@ function completePad(p) {
     const dk = G.byId[p.dock];
     if (dk) { dk.rate *= .55; dk.setBoat('sailboat'); popIn(dk.boatG); banner('Парусник: рыбы почти вдвое больше'); }
   }
+  if (p.effect === 'water') { G.waterMult = .5; banner('Колодец: пшеница растёт вдвое быстрее'); }
   if (p.effect === 'crew') {
     G.crew++;
     const c = CREW[G.crew - 1];
     G.helpers.forEach(h => { h.cap = c.cap; if (c.hp > h.maxHp) { h.hp += c.hp - h.maxHp; h.maxHp = c.hp; helperHearts(h); } if (c.torch) giveTorch(h); });
-    banner(c.torch ? 'Работники с факелами!' : `Бригада ${ROMAN[G.crew]}`);
-    if (G.crew < CREW.length) nextTier(p, round5(goalCost() * CREW_COST[G.crew - 1]), `БРИГАДА ${ROMAN[G.crew + 1]}`, 'crew', G.crew + 1);
+    banner(['', '', 'Работники быстрее и несут по 7', 'Работники ещё быстрее, несут по 9, у всех 4 сердца', 'У работников факелы — звери их не трогают'][G.crew]);
+    if (G.crew < CREW.length) nextTier(p, round5(goalCost() * CREW_COST[G.crew - 1]), 'УЛУЧШИТЬ\nРАБОТНИКОВ', 'crew', G.crew + 1);
   }
   if (p.convUp) {
     const c = p.convUp; c.tier++; c.out = c.d.tiers[c.tier - 1];
@@ -1093,11 +1424,12 @@ function completePad(p) {
   if (p.goal) { spawn({ t: 'monument', label: p.label }, at, true); win(); }
   G.pads.forEach(q => { if (!q.done && q.req === p.id) { q.visible = true; q.mesh.visible = true; popIn(q.mesh); if (q.free) completePad(q); } });
   burst(new THREE.Vector3(p.x, 1, p.z), [0xffd23f, 0x3aa64c, 0xe2493b, 0x3d87d6], 26);
-  beep(523, .12, 'triangle', .07); setTimeout(() => beep(784, .16, 'triangle', .07), 90);
+  SFX.build();
 }
 
 function loadLevel(i) {
   clearLevel(); resetState();
+  if (tut) tut = null; $('#tut').hidden = true;
   resetRig(player.ch.rig); player.ch.g.rotation.z = 0; player.ch.g.position.y = 0;
   G.lvl = i; G.L = LEVELS[i];
   world = new THREE.Group(); scene.add(world);
@@ -1119,7 +1451,10 @@ function loadLevel(i) {
   player.ch.g.position.set(G.L.start[0], 0, G.L.start[1]); player.ch.g.rotation.y = PI;
   G.wolfT = G.L.wolves ? G.L.wolves.first : 0;
   G.mooseT = G.L.moose ? G.L.moose.first : 0;
+  G.stormT = G.L.storm ? G.L.storm.first || G.L.storm.every : 0;
+  scene.fog.near = 34; scene.fog.far = 75; makeSnow();
   $('#lvName').textContent = `Уровень ${i + 1} · ${G.L.name}`;
+  parShown = ''; updPar();
   const gp = G.L.pads.find(p => p.goal);
   $('#goalT').textContent = `Построй: ${G.L.goal} ($${gp.cost})`;
   showHint(G.L.hint);
@@ -1135,7 +1470,7 @@ function harvest(s, stack) {
   s.hp--; s.shake = .25;
   const it = stack.push(s.item, true);
   fly(s.item, s.pos.clone().setY(1.2), () => wp(it.mesh), .25, () => { it.mesh.visible = true; });
-  if (s.hp <= 0) { s.dead = true; s.regrowT = SRC[s.t].regrow; s.md.crown.visible = false; s.md.stump.visible = true; }
+  if (s.hp <= 0) { s.dead = true; s.regrowT = SRC[s.t].regrow * (s.t === 'wheat' ? G.waterMult : 1); s.md.crown.visible = false; s.md.stump.visible = true; }
   else s.md.crown.scale.setScalar(.6 + .4 * s.hp / s.max);
 }
 function giveToConv(stack, c) {
@@ -1166,7 +1501,7 @@ function syncPile(m) {
   while (m.bills.length > want) m.pile.remove(m.bills.pop());
 }
 function collectCash(m) {
-  const amt = m.cash; m.cash = 0;
+  const amt = m.cash * (G.boostT > 0 ? 2 : 1); m.cash = 0;
   const n = Math.min(10, m.bills.length);
   for (let i = 0; i < n; i++) {
     const from = wp(m.bills[m.bills.length - 1 - i]);
@@ -1174,8 +1509,8 @@ function collectCash(m) {
   }
   syncPile(m);
   G.money += amt; G.earned += amt;
-  floatText('+$' + amt, m.cashZ);
-  beep(880, .08, 'square', .03); setTimeout(() => beep(1320, .1, 'square', .03), 60);
+  floatText((G.boostT > 0 ? '×2 +$' : '+$') + amt, m.cashZ);
+  SFX.cash();
   updHud(true);
 }
 
@@ -1283,7 +1618,8 @@ function updPlayer(dt) {
   const moving = m > .12;
   if (moving) {
     const k = Math.min(1, m) / m;
-    p.x += mx * k * G.speed * dt; p.z += mz * k * G.speed * dt;
+    const sp = G.speed * (G.storm > 0 ? .75 : 1);
+    p.x += mx * k * sp * dt; p.z += mz * k * sp * dt;
     player.ch.g.rotation.y = lerpAngle(player.ch.g.rotation.y, Math.atan2(mx, mz), Math.min(1, dt * 14));
     hideHintSoon();
   }
@@ -1296,7 +1632,7 @@ function updPlayer(dt) {
   if (G.inv > 0) { G.inv -= dt; player.ch.g.visible = Math.floor(G.inv * 12) % 2 === 0 || G.inv <= 0; }
   // факел: берётся у костра, горит 15 секунд
   if (G.fires.some(f => near(p, f.pos, 1.7)) && G.torch < G.torchMax - 1) {
-    if (G.torch <= 0) { floatText('Факел!', p); beep(330, .2, 'sawtooth', .04); }
+    if (G.torch <= 0) { floatText('Факел!', p); SFX.torch(); }
     G.torch = G.torchMax;
   }
   if (G.torch > 0) G.torch = Math.max(0, G.torch - dt);
@@ -1356,16 +1692,70 @@ function updSources(dt) {
   }
 }
 function updDocks(dt) {
+  updWeather(dt); updCarts(dt);
+  for (const c of G.cows) c.rig.mixer.update(dt);
   for (const dk of G.docks) {
-    dk.boatG.position.y = Math.sin(G.time * 1.6) * .06; dk.boatG.rotation.z = Math.sin(G.time * 1.1) * .04;
+    if (!dk.still) { dk.boatG.position.y = Math.sin(G.time * 1.6) * .06; dk.boatG.rotation.z = Math.sin(G.time * 1.1) * .04; }
     if (dk.outStack.count >= 24) continue;
     dk.t += dt;
     if (dk.t >= dk.rate) {
       dk.t = 0;
-      const it = dk.outStack.push('fish', true), from = wp(dk.boatG).setY(.8);
-      fly('fish', from, () => wp(it.mesh), .5, () => { it.mesh.visible = true; });
+      const item = dk.item || 'fish', it = dk.outStack.push(item, true), from = wp(dk.boatG).setY(.8);
+      fly(item, from, () => wp(it.mesh), .5, () => { it.mesh.visible = true; });
     }
   }
+}
+function updCarts(dt) {
+  for (const c of G.carts) {
+    const cap = 6;
+    if (c.state === 'load') {
+      c.t -= dt;
+      if (c.t <= 0 && c.stack.count < cap && c.from.outStack.count) { takeFromConv(c.stack, c.from); c.t = .15; c.wait = 0; }
+      else if (c.t <= 0) c.wait = (c.wait || 0) + dt;
+      if (c.stack.count >= cap || (c.stack.count && c.wait > 1.2)) c.state = 'go';
+    } else if (c.state === 'go' || c.state === 'back') {
+      const dir = c.state === 'go' ? 1 : -1, len = c.a.distanceTo(c.b);
+      c.k = Math.max(0, Math.min(1, c.k + dir * dt * 3.2 / len));
+      c.cart.position.lerpVectors(c.a, c.b, c.k);
+      if (c.state === 'go' && c.k >= 1) c.state = 'unload';
+      if (c.state === 'back' && c.k <= 0) c.state = 'load';
+    } else if (c.state === 'unload') {
+      c.t -= dt;
+      if (c.t <= 0) { if (!c.stack.count) c.state = 'back'; else if (giveToConv(c.stack, c.to)) c.t = .12; }
+    }
+  }
+}
+// Буря в горах: всё медленнее, видно хуже, идёт снег
+function updWeather(dt) {
+  const S = G.L.storm;
+  if (S) {
+    G.stormT -= dt;
+    if (G.stormT <= 0) {
+      if (G.storm > 0) { G.storm = 0; G.stormT = S.every; banner('Буря стихла'); }
+      else { G.storm = 1; G.stormT = S.dur; banner('Буря! Все двигаются медленнее'); SFX.wind(); }
+    }
+  }
+  const on = G.storm > 0, f = scene.fog, k = Math.min(1, dt * 1.5);
+  f.near += ((on ? 6 : 34) - f.near) * k; f.far += ((on ? 24 : 75) - f.far) * k;
+  if (snowFx) {
+    snowFx.visible = on || snowFx.material.opacity > .02;
+    snowFx.material.opacity += ((on ? .9 : 0) - snowFx.material.opacity) * k;
+    const a = snowFx.geometry.attributes.position;
+    for (let i = 0; i < a.count; i++) {
+      let y = a.getY(i) - dt * 4; if (y < 0) y += 14;
+      a.setY(i, y); a.setX(i, a.getX(i) + dt * 1.5);
+      if (a.getX(i) > camLook.x + 15) a.setX(i, camLook.x - 15);
+    }
+    a.needsUpdate = true; snowFx.position.z = camLook.z - snowFx.userData.z0;
+  }
+}
+let snowFx = null;
+function makeSnow() {
+  const n = 700, pos = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) { pos[i * 3] = rnd(-15, 15); pos[i * 3 + 1] = rnd(0, 14); pos[i * 3 + 2] = rnd(-12, 12); }
+  const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  snowFx = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xffffff, size: .14, transparent: true, opacity: 0, depthWrite: false }));
+  snowFx.userData.z0 = 0; snowFx.visible = false; world.add(snowFx);
 }
 function updConvs(dt) {
   G.puffT -= dt;
@@ -1397,7 +1787,7 @@ function updHelpers(dt) {
     const sp = h.spec, target = G.byId[sp.to];
     if (!target) continue;
     const dropAt = (target.type === 'conv' ? target.inZ : target.drop).clone().setZ((target.type === 'conv' ? target.inZ : target.drop).z + 1.3);
-    const spd = CREW[G.crew - 1].spd;
+    const spd = CREW[G.crew - 1].spd * (G.storm > 0 ? .8 : 1);
     if (!h.deliver) {
       if (sp.kind) {
         const p = h.pos; let best = h.src && !h.src.dead ? h.src : null, bd = 1e9;
@@ -1436,17 +1826,17 @@ function updHelpers(dt) {
 }
 function spawnBoss() {
   const L = G.L, z = -(L.h / 2 + 3);
-  const B = L.wolves.boss, kind = B.kind || 'wolf', spec = kind === 'moose' ? (L.moose || L.wolves) : L.wolves;
+  const B = L.wolves.boss, kind = B.kind || 'wolf', spec = kind !== 'wolf' ? (L.moose || L.wolves) : L.wolves;
   const w = makeWolf(kind); w.g.position.set(rnd(-3, 3), 0, z); world.add(w.g);
-  w.g.scale.setScalar(kind === 'moose' ? 1.35 : 1.45);
-  w.g.traverse(o => { if (o.isMesh) { o.material = o.material.clone(); o.material.color.multiplyScalar(.42); } });
+  w.g.scale.setScalar(kind === 'moose' ? 1.35 : kind === 'fox' ? 1.7 : 1.45);
+  w.g.traverse(o => { if (o.isMesh) { o.material = o.material.clone(); if (B.tint === 'white') o.material.color.lerp(new THREE.Color(0xffffff), .75); else o.material.color.multiplyScalar(.42); } });
   const cv = canvasTex(160, 48), sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: cv.tex, depthTest: false }));
   sp.scale.set(1.2, .36, 1); sp.position.y = 1.7; sp.renderOrder = 5; w.g.add(sp);
   const o = { w, kind, pos: w.g.position, state: 'roam', life: Infinity, jump: null, tgt: new THREE.Vector3(0, 0, 0), boss: true, bhp: B.hp || 3, bmax: B.hp || 3, mark: cv,
     name: B.name || 'ВОЖАК', spd: spec.speed, dmg: spec.dmg || 1, aggro: 7 };
   G.wolves.push(o); G.boss = o; drawBossMark(o);
   banner(`${o.name[0] + o.name.slice(1).toLowerCase()}! Прогони его факелом ${o.bhp} раза`);
-  beep(90, .6, 'sawtooth', .06); setTimeout(() => beep(70, .7, 'sawtooth', .06), 350);
+  SFX.howl(kind); setTimeout(() => SFX.howl(kind), 600);
 }
 function drawBossMark(o) {
   const { ctx, tex } = o.mark;
@@ -1464,30 +1854,55 @@ function bossBeaten() {
   G.money += bonus; G.earned += bonus; updHud(true);
   floatText(`+$${bonus} за победу`, player.ch.g.position);
   banner('Прогнали! Можно строить');
-  beep(523, .15, 'triangle', .07); setTimeout(() => beep(784, .25, 'triangle', .07), 140);
+  SFX.build();
 }
 function spawnWolf(kind = 'wolf') {
   const L = G.L, hw = L.w / 2 + 3, hh = L.h / 2 + 3, side = Math.floor(rnd(0, 4));
   const x = side < 2 ? (side ? hw : -hw) : rnd(-hw, hw), z = side >= 2 ? (side === 2 ? -hh : hh) : rnd(-hh, hh);
-  const spec = kind === 'moose' ? L.moose : L.wolves;
+  const spec = kind !== 'wolf' ? L.moose : L.wolves;
   const w = makeWolf(kind); w.g.position.set(x, 0, z); world.add(w.g);
   G.wolves.push({ w, kind, pos: w.g.position, state: 'roam', life: 70, jump: null, tgt: new THREE.Vector3(rnd(-3, 3), 0, rnd(-3, 3)),
     spd: spec.speed, dmg: spec.dmg || 1, aggro: spec.aggro || 5 });
   if (kind === 'moose') banner('Лось! Бодается — минус 2 сердца');
+  else if (kind === 'yak') banner('Як! Бодается — минус 2 сердца');
+  else if (kind === 'fox') banner('Лиса! Ворует с лотков — прогони');
   else banner(G.fires.length ? 'Волк! Бери факел у костра' : 'Волк! Строй костёр');
-  beep(kind === 'moose' ? 100 : 140, .35, 'sawtooth', .04);
+  SFX.howl(kind);
+}
+// Лиса выбирает, что утащить: лоток с готовым товаром или деньги в лавке (но не у костра)
+function foxLoot(p) {
+  const opts = [];
+  for (const c of [...G.convs, ...G.docks]) if (c.outStack.count >= 2 && !inFire(c.outZ)) opts.push({ stack: c.outStack, at: c.outZ });
+  for (const m of G.markets) if (m.cash >= 10 && !inFire(m.cashZ)) opts.push({ market: m, at: m.cashZ });
+  if (!opts.length) return null;
+  opts.sort((a, b) => Math.hypot(a.at.x - p.x, a.at.z - p.z) - Math.hypot(b.at.x - p.x, b.at.z - p.z));
+  return opts[Math.floor(Math.random() * Math.min(2, opts.length))];
+}
+const lootReady = l => l && (l.market ? l.market.cash >= 10 : l.stack.count >= 1);
+function steal(l, p) {
+  if (l.market) {
+    const amt = Math.max(10, Math.round(l.market.cash * .3)); l.market.cash = Math.max(0, l.market.cash - amt); syncPile(l.market);
+    floatText(`−$${amt}`, p, true);
+  } else {
+    let n = 0;
+    while (n < 3 && l.stack.count) { const got = l.stack.take(); parts.push({ m: (() => { const m = makeItem(got.kind); m.position.copy(got.pos); scene.add(m); return m; })(), v: new THREE.Vector3(rnd(-2, 2), 4, rnd(-2, 2)), life: .8, max: .8, spin: 6 }); n++; }
+    floatText(`−${n} с лотка`, p, true);
+  }
+  SFX.steal();
 }
 // забор: волк не проходит сквозь него, а перепрыгивает
 function insideFence(x, z) { return Math.abs(x) < G.L.w / 2 + .45 && Math.abs(z) < G.L.h / 2 + .45; }
+// Звери приходят на 30% реже, чем записано в уровнях (по отзывам игроков)
+const SPAWN_SLOW = 1 / .7;
 function updWolves(dt) {
   const W = G.L.wolves || { speed: 4 }, MS = G.L.moose;
   if (MS && !G.won) {
     G.mooseT -= dt;
-    if (G.mooseT <= 0) { G.mooseT = MS.every; if (G.wolves.filter(o => o.kind === 'moose' && !o.boss).length < MS.max) spawnWolf('moose'); }
+    if (G.mooseT <= 0) { G.mooseT = MS.every * SPAWN_SLOW; if (G.wolves.filter(o => o.kind !== 'wolf' && !o.boss).length < MS.max) spawnWolf(MS.kind || 'moose'); }
   }
   if (G.L.wolves && !G.won) {
     G.wolfT -= dt;
-    if (G.wolfT <= 0) { G.wolfT = W.every; if (G.wolves.filter(o => !o.boss && o.kind !== 'moose').length < W.max) spawnWolf(); }
+    if (G.wolfT <= 0) { G.wolfT = W.every * SPAWN_SLOW; if (G.wolves.filter(o => !o.boss && o.kind === 'wolf').length < W.max) spawnWolf(); }
     if (W.boss && !G.bossSpawned && G.time >= W.boss.at) { G.bossSpawned = true; spawnBoss(); }
   }
   const pp = player.ch.g.position, hw = G.L.w / 2, hh = G.L.h / 2;
@@ -1511,6 +1926,9 @@ function updWolves(dt) {
       const helperOpen = h => h.stun <= 0 && !inFire(h.pos) && !h.torch;
       if (o.life <= 0 || G.won) { o.state = 'flee'; o.gone = true; }
       else if (o.boss && o.retreatT > 0) { /* вожак отходит после удара факелом */ }
+      else if (o.kind === 'fox' && !o.boss && (dist < 2.2 || G.helpers.some(h => near(p, h.pos, 1.6)))) {
+        o.state = 'flee'; o.scared = true; o.exit = null; floatText('Брысь!', p); SFX.scare();
+      }
       else if ((G.torch > 0 && dist < 2.3) || G.helpers.some(h => h.torch && near(p, h.pos, 2.3))) {
         // факел пугает, только если подойти вплотную. Вожака — только с третьего раза
         o.state = 'flee'; o.scared = true;
@@ -1520,16 +1938,21 @@ function updWolves(dt) {
             o.retreatT = 2.5;
             const a = Math.atan2(p.z - pp.z, p.x - pp.x);
             o.exit = new THREE.Vector3(Math.max(-hw + 1, Math.min(hw - 1, p.x + Math.cos(a) * 6)), 0, Math.max(-hh + 1, Math.min(hh - 1, p.z + Math.sin(a) * 6)));
-            floatText(`Ещё ${o.bhp}!`, p, true); beep(200, .2, 'square', .05);
+            floatText(`Ещё ${o.bhp}!`, p, true);
           } else { o.gone = true; o.exit = null; floatText('Сбежал!', p); }
         } else floatText('Пошёл вон!', p);
-        beep(220, .15, 'square', .04);
+        SFX.scare();
       }
+      else if (o.kind === 'fox' && o.state === 'roam') {
+        const loot = foxLoot(p);
+        if (loot) { o.state = 'steal'; o.loot = loot; }
+      }
+      else if (o.kind === 'fox') { if (o.state === 'steal' && !lootReady(o.loot)) o.state = 'roam'; }
       else if (o.state === 'roam') {
         // нападает на того, кто оказался рядом: игрок или работник
         if (playerOpen && dist < o.aggro) o.prey = null;
         else o.prey = G.helpers.find(h => helperOpen(h) && near(p, h.pos, 4)) || undefined;
-        if (o.prey !== undefined) { o.state = 'hunt'; floatText('Р-р-р!', p, true); beep(160, .2, 'sawtooth', .04); }
+        if (o.prey !== undefined) { o.state = 'hunt'; floatText('Р-р-р!', p, true); SFX.growl(); }
       }
       else if (o.state === 'hunt') {
         const lost = o.prey ? (!helperOpen(o.prey) || !near(p, o.prey.pos, 9)) : (!playerOpen || dist > 9);
@@ -1537,7 +1960,8 @@ function updWolves(dt) {
       }
     }
     let tgt, spd;
-    if (o.state === 'hunt') { tgt = o.prey ? o.prey.pos : pp; spd = o.spd * (o.boss ? 1.06 : 1); }
+    if (o.state === 'steal') { tgt = o.loot.at; spd = o.spd; }
+    else if (o.state === 'hunt') { tgt = o.prey ? o.prey.pos : pp; spd = o.spd * (o.boss ? 1.06 : 1); }
     else if (o.state === 'roam') {
       if (near(p, o.tgt, .6) || !insideFence(o.tgt.x, o.tgt.z)) o.tgt.set(rnd(-hw + 1, hw - 1), 0, rnd(-hh + 1, hh - 1));
       tgt = o.tgt; spd = o.spd * .4;
@@ -1564,6 +1988,11 @@ function updWolves(dt) {
     o.w.legs.forEach((l, j) => { l.rotation.x = Math.sin(o.w.phase + (j % 2 ? PI : 0) + (j > 1 ? PI / 2 : 0)) * .7; });
     p.y = Math.abs(Math.sin(o.w.phase)) * .06;
     if (o.w.rig) { play(o.w.rig, o.state === 'roam' ? 'walk' : 'run'); p.y = 0; }
+    if (o.state === 'steal' && near(p, o.loot.at, .9)) {
+      steal(o.loot, p);
+      o.state = 'flee'; o.scared = false; o.exit = null;
+      if (o.boss) { o.retreatT = 3; o.exit = new THREE.Vector3(rnd(-hw + 1, hw - 1), 0, rnd(-hh + 1, hh - 1)); }
+    }
     if (o.state === 'hunt' && !o.prey && G.inv <= 0 && G.torch <= 0 && near(p, pp, .8)) {
       const lost = player.stack.count;
       if (lost) { scatter(player.stack); floatText(`−${lost} груза`, pp, true); }
@@ -1574,7 +2003,7 @@ function updWolves(dt) {
       dropCash(pp);
       G.hp = Math.max(0, G.hp - o.dmg); G.bitten = true; drawHearts();
       if (G.hp <= 0) lose();
-      flash(); beep(110, .4, 'sawtooth', .06);
+      flash(); SFX.bite();
     }
     if (o.state === 'hunt' && o.prey && near(p, o.prey.pos, .8)) {
       const h = o.prey;
@@ -1583,7 +2012,7 @@ function updWolves(dt) {
       if (o.boss) { o.retreatT = 4; o.exit = new THREE.Vector3(rnd(-hw + 1, hw - 1), 0, rnd(-hh + 1, hh - 1)); }
       h.hp = Math.max(0, h.hp - o.dmg); helperHearts(h);
       if (h.hp <= 0) killHelper(h);
-      beep(130, .3, 'sawtooth', .05);
+      SFX.bite();
     }
     if (o.state === 'flee' && d < .5) {
       if (o.boss && !o.gone) { o.retreatT = Math.min(o.retreatT || 0, .01); continue; }
@@ -1593,12 +2022,61 @@ function updWolves(dt) {
   }
 }
 
+// ---------- Стрелки к площадкам за краем экрана ----------
+// Показываем цель уровня и площадки, на которые уже хватает денег, если их не видно на экране
+const arrowEls = [];
+const arrowV = new THREE.Vector3();
+function updArrows() {
+  const want = [];
+  if (G.running && !G.won) {
+    const p = player.ch.g.position;
+    for (const pd of G.pads) {
+      if (!pd.visible || pd.done || pd.lockedAt) continue;
+      const left = pd.cost - pd.paid;
+      if (pd.goal || G.money >= left) want.push({ pd, goal: !!pd.goal, d: Math.hypot(pd.x - p.x, pd.z - p.z), text: (pd.goal ? 'ЦЕЛЬ ' : '') + '$' + left });
+    }
+    want.sort((a, b) => (b.goal - a.goal) || a.d - b.d);
+  }
+  const W = innerWidth, H = innerHeight, mx = 40, top = 140, bottom = 100;
+  let used = 0;
+  for (const w of want.slice(0, 3)) {
+    arrowV.set(w.pd.x, .3, w.pd.z).project(camera);
+    let x = (arrowV.x * .5 + .5) * W, y = (-arrowV.y * .5 + .5) * H;
+    if (x > -40 && x < W + 40 && y > top - 70 && y < H + 30 && arrowV.z < 1) continue;   // площадка видна хотя бы краем
+    const cx = W / 2, cy = (top + H - bottom) / 2, dx = x - cx, dy = y - cy;
+    const kx = dx ? ((dx > 0 ? W - mx : mx) - cx) / dx : Infinity, ky = dy ? ((dy > 0 ? H - bottom : top) - cy) / dy : Infinity;
+    const k = Math.min(Math.abs(kx), Math.abs(ky)); x = cx + dx * k; y = cy + dy * k;
+    let el = arrowEls[used];
+    if (!el) { el = document.createElement('div'); el.className = 'edge'; el.innerHTML = '<i></i><span></span>'; $('#arrows').appendChild(el); arrowEls.push(el); }
+    el.hidden = false; el.classList.toggle('goal', w.goal);
+    el.querySelector('span').textContent = w.text;
+    el.querySelector('i').style.transform = `rotate(${Math.atan2(dy, dx) + PI / 2}rad)`;
+    el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+    used++;
+  }
+  for (let i = used; i < arrowEls.length; i++) arrowEls[i].hidden = true;
+}
+
 // ---------- Камера ----------
 const camLook = new THREE.Vector3();
-function camOffset() { const a = camera.aspect; const k = a < .8 ? 1.4 : a < 1.2 ? 1.15 : 1; return new THREE.Vector3(0, 14.5 * k, 10.5 * k); }
+function camOffset() {
+  const a = camera.aspect;
+  if (a < .8) return new THREE.Vector3(0, 17.6, 10.4);   // телефон вертикально: ближе и чуть сверху
+  const k = a < 1.2 ? 1.15 : 1; return new THREE.Vector3(0, 14.5 * k, 10.5 * k);
+}
 function snapCamera() { const p = player.ch.g.position; camLook.copy(p); camera.position.copy(p).add(camOffset()); camera.lookAt(camLook); }
+let menuAng = 0;
 function updCamera(dt) {
   const p = player.ch.g.position, k = Math.min(1, dt * 5);
+  if (!G.running && !$('#menu').hidden) {
+    // в главном меню камера медленно облетает героя
+    menuAng += dt * .12;
+    const r = camera.aspect < .8 ? 7.2 : 8.5, target = new THREE.Vector3(p.x, 1.6, p.z);
+    camera.position.lerp(new THREE.Vector3(p.x + Math.sin(menuAng) * r, 4.4, p.z + Math.cos(menuAng) * r), Math.min(1, dt * 2));
+    camLook.lerp(target, Math.min(1, dt * 2)); camera.lookAt(camLook);
+    sun.position.set(p.x + 8, 18, p.z + 6); sun.target.position.copy(p);
+    return;
+  }
   camLook.lerp(new THREE.Vector3(p.x, 0, p.z - .5), k);
   camera.position.lerp(camLook.clone().add(camOffset()), k);
   camera.lookAt(camLook);
@@ -1612,7 +2090,7 @@ function updHud(bump) {
     shownMoney = G.money; $('#moneyV').textContent = G.money;
     if (bump) { const m = $('#money'); m.classList.remove('bump'); void m.offsetWidth; m.classList.add('bump'); }
   }
-  const c = $('#cargo'); c.textContent = `Груз ${player.stack.count}/${G.cap}` + (G.torch > 0 ? ` · Факел ${Math.ceil(G.torch)} с` : '') + (G.stun > 0 ? ` · Оглушён ${Math.ceil(G.stun)} с` : ''); c.classList.toggle('full', player.stack.count >= G.cap);
+  const c = $('#cargo'); c.textContent = `Груз ${player.stack.count}/${G.cap}` + (G.torch > 0 ? ` · Факел ${Math.ceil(G.torch)} с` : '') + (G.stun > 0 ? ` · Оглушён ${Math.ceil(G.stun)} с` : '') + (G.boostT > 0 ? ` · ×2 деньги ${Math.ceil(G.boostT)} с` : ''); c.classList.toggle('full', player.stack.count >= G.cap);
 }
 let hintTimer = null;
 function showHint(t) { const h = $('#hint'); h.textContent = t; h.style.opacity = '1'; h.hidden = false; clearTimeout(hintTimer); hintTimer = null; }
@@ -1644,7 +2122,7 @@ function killHelper(h) {
   h.stun = 99; G.lostWorker = true;
   floatText('Работник погиб', h.pos, true);
   burst(h.pos.clone().setY(1), [0x9aa6b3, 0xffffff, 0xe2493b], 18, 3);
-  beep(90, .5, 'sawtooth', .05);
+  SFX.death();
   if (h.ch.rig && h.ch.rig.acts.death) { if (h.hearts) h.hearts.sp.visible = false; playOnce(h.ch.rig, 'death', true); G.dying.push({ ch: h.ch, t: 1.6 }); }
   else world.remove(h.ch.g);
   G.helpers.splice(G.helpers.indexOf(h), 1);
@@ -1672,7 +2150,7 @@ function updDrops(dt, p) {
     const d = G.drops[i]; d.t -= dt;
     d.g.visible = d.t > 3 || Math.floor(d.t * 6) % 2 === 0;
     if (G.stun <= 0 && near(p, d.pos, 1.4)) {
-      G.money += d.amt; floatText('+$' + d.amt, d.pos); beep(880, .08, 'square', .03); updHud(true);
+      G.money += d.amt; floatText('+$' + d.amt, d.pos); SFX.cash(); updHud(true);
       world.remove(d.g); G.drops.splice(i, 1);
     } else if (d.t <= 0) { world.remove(d.g); G.drops.splice(i, 1); }
   }
@@ -1682,7 +2160,7 @@ function lose() {
   G.wolves.forEach(o => { o.state = 'flee'; });
   if (player.ch.rig && player.ch.rig.acts.death) { player.ch.g.rotation.z = 0; playOnce(player.ch.rig, 'death', true); }
   else { player.ch.g.rotation.z = PI / 2; player.ch.g.position.y = .3; }
-  banner('Тебя загрызли');
+  banner('Тебя загрызли'); SFX.lose();
   setTimeout(() => {
     G.running = false; joy.on = false; $('#joy').hidden = true;
     player.ch.g.rotation.z = 0; player.ch.g.position.y = 0;
@@ -1694,6 +2172,7 @@ function lose() {
     $('#stEarn').textContent = '$' + G.earned;
     $('#nextBtn').textContent = 'Заново';
     $('#winStars').hidden = true;
+    $('#reviveBtn').hidden = !ADS.ready();
     $('#win').hidden = false; $('#hud').hidden = true;
   }, 1800);
 }
@@ -1707,7 +2186,7 @@ function win() {
   G.wolves.forEach(o => { o.state = 'flee'; });
   setTimeout(() => {
     burst(player.ch.g.position.clone().setY(2), [0xffd23f, 0x3aa64c, 0xe2493b, 0x3d87d6, 0xffffff], 60, 7);
-    beep(523, .15, 'triangle', .07); setTimeout(() => beep(659, .15, 'triangle', .07), 120); setTimeout(() => beep(784, .3, 'triangle', .07), 240);
+    SFX.win();
   }, 300);
   setTimeout(() => {
     G.running = false; joy.on = false; $('#joy').hidden = true;
@@ -1719,13 +2198,14 @@ function win() {
     $('#stTime').textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
     $('#stEarn').textContent = '$' + G.earned;
     $('#nextBtn').textContent = last ? 'Сыграть заново' : 'Дальше';
-    const got = [true, !G.bitten && !G.lostWorker, G.time <= PAR_TIME];
+    const got = [true, !G.bitten && !G.lostWorker, G.time <= parTime(G.L)];
     const n = got.filter(Boolean).length, before = bestStars[G.lvl] || 0;
     if (n > before) { bestStars[G.lvl] = n; store.set('kvr_stars', bestStars); }
-    const labels = ['Построено', 'Без укусов и потерь работников', `Быстрее ${Math.floor(PAR_TIME / 60)}:${String(PAR_TIME % 60).padStart(2, '0')}`];
+    const labels = ['Построено', 'Без укусов и потерь работников', `Быстрее ${mmss(parTime(G.L))}`];
     $('#winStars').innerHTML = got.map((ok, i) => `<div class="${ok ? 'ok' : ''}"><span>★</span>${labels[i]}</div>`).join('')
       + (n > before ? `<div class="ok" style="justify-content:center;color:#c99a12">+${n - before} ★ в копилку</div>` : '');
     $('#winStars').hidden = false;
+    $('#reviveBtn').hidden = true;
     $('#win').hidden = false; $('#hud').hidden = true;
   }, 2000);
 }
@@ -1735,7 +2215,7 @@ function renderLevels() {
   const soon = [];
   WORLDS.forEach((W, w) => {
     const idx = LEVELS.map((_, i) => i).filter(i => worldOf(i) === w);
-    if (!idx.length) { soon.push(`<span>${w + 1} · ${W.name}</span>`); return; }
+    if (!idx.length) { soon.push(`<div class="tz"><i>${w + 1}</i><b>${W.name}<span>уровни ${w * 10 + 1}–${w * 10 + 10}</span></b><em>${W.teaser || ''}</em></div>`); return; }
     const got = idx.reduce((a, i) => a + (bestStars[i] || 0), 0);
     const sec = document.createElement('div');
     sec.innerHTML = `<div class="world-h"><b><small>Мир ${w + 1}</small>${W.name}</b><span>★ ${got}/${idx.length * 3}</span></div>`;
@@ -1749,9 +2229,15 @@ function renderLevels() {
     });
     sec.appendChild(grid); box.appendChild(sec);
   });
-  if (soon.length) { const d = document.createElement('div'); d.innerHTML = `<div class="world-h"><b><small>Скоро</small>Новые миры</b></div><div class="soon">${soon.join('')}</div>`; box.appendChild(d); }
-  $('#soundBtn').textContent = muted ? 'Звук: выкл' : 'Звук: вкл';
-  $('#starBal').textContent = '★ ' + starsLeft();
+  if (soon.length) { const d = document.createElement('div'); d.innerHTML = `<div class="world-h"><b><small>Скоро</small>Ещё ${soon.length * 10} уровней</b></div><div class="soon">${soon.join('')}</div>`; box.appendChild(d); }
+  $('#soundBtn').textContent = muted ? 'Звуки: выкл' : 'Звуки: вкл';
+  $('#musicBtn').textContent = musicOn ? 'Музыка: вкл' : 'Музыка: выкл';
+  const left = starsLeft(), canBuy = PERKS.some(p => perkLvl(p.id) < p.costs.length && left >= p.costs[perkLvl(p.id)]);
+  $('#starBal').textContent = left; $('#starBal').hidden = !canBuy;
+  $('#starAll').textContent = starsTotal();
+  const w = worldOf(G.lvl), from = w * 10, done = LEVELS.slice(from, from + 10).filter((_, i) => bestStars[from + i]).length;
+  $('#wcName').textContent = `Мир ${w + 1} · ${WORLDS[w].name}`; $('#wcCount').textContent = `${done}/10`; $('#wcBar').style.width = done * 10 + '%';
+  const ps = $('#playSub'); if (ps) ps.textContent = `Уровень ${G.lvl + 1} · ${G.L ? G.L.name : ''}`;
   $('#testNote').hidden = !TEST_UNLOCK_ALL;
 }
 function renderShop() {
@@ -1774,9 +2260,147 @@ $('#perks').addEventListener('click', e => {
   // бонусы вступают в силу со следующего запуска уровня
   if (!G.running && G.time === 0) loadLevel(G.lvl);
 });
-$('#shopBtn').addEventListener('click', () => { renderShop(); $('#menu').hidden = true; $('#shop').hidden = false; });
-$('#shopBack').addEventListener('click', () => { $('#shop').hidden = true; openMenu(); });
-function openMenu() { G.running = false; joy.on = false; $('#joy').hidden = true; renderLevels(); $('#playBtn').textContent = G.time > 0 && !G.won ? 'Продолжить' : 'Играть'; $('#menu').hidden = false; $('#hud').hidden = true; }
+// Экраны меню: главный, уровни, магазин, помощь, связь. Одновременно открыт один
+const SCREENS = ['menu', 'levels', 'shop', 'help', 'feedback', 'win'];
+function showScreen(id) { SCREENS.forEach(k => { $('#' + k).hidden = k !== id; }); SFX.ui(); }
+// Контакты для обратной связи и ссылка на игру в магазине — заполняются перед выпуском
+const GAME_VERSION = '1.0.0';
+const CONTACTS = { email: 'nazzarovmax777@gmail.com', telegram: 'MaxNazarov102', store: '' };
+function renderContacts() {
+  const items = [];
+  if (CONTACTS.telegram) items.push(`<a href="https://t.me/${CONTACTS.telegram}" target="_blank" rel="noopener">Написать в Telegram<small>@${CONTACTS.telegram}</small></a>`);
+  if (CONTACTS.email) items.push(`<div>Почта<small>${CONTACTS.email}</small></div>`);
+  if (CONTACTS.store) items.push(`<a href="${CONTACTS.store}" target="_blank" rel="noopener">Оценить игру в RuStore<small>Отзыв помогает другим найти игру</small></a>`);
+  if (!items.length) items.push('<div>Контакты появятся в ближайшем обновлении<small>Пока можно оставить отзыв на странице игры в магазине</small></div>');
+  $('#contactList').innerHTML = items.join('');
+  $('#gameVersion').textContent = GAME_VERSION;
+}
+$('#shopBtn').addEventListener('click', () => { renderShop(); showScreen('shop'); });
+$('#shopBack').addEventListener('click', () => openMenu());
+$('#levelsBtn').addEventListener('click', () => { renderLevels(); showScreen('levels'); });
+$('#helpBtn').addEventListener('click', () => showScreen('help'));
+$('#gearBtn').addEventListener('click', e => { e.stopPropagation(); $('#settings').hidden = !$('#settings').hidden; SFX.ui(); });
+document.addEventListener('pointerdown', e => { if (!$('#settings').hidden && !e.target.closest('#settings, #gearBtn')) $('#settings').hidden = true; });
+$('#feedbackBtn').addEventListener('click', () => { renderContacts(); showScreen('feedback'); });
+document.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => openMenu()));
+function openMenu() {
+  G.running = false; joy.on = false; $('#joy').hidden = true; renderLevels();
+  $('#playBtn').innerHTML = `<span class="pb-main">${G.time > 0 && !G.won ? 'Продолжить' : 'Играть'}</span><span class="pb-sub" id="playSub"></span>`; renderLevels();
+  showScreen('menu'); $('#hud').hidden = true;
+}
+// Карточка цели в начале уровня: что строим и сколько стоит. Исчезает сама или по касанию
+let goalCardT = null;
+function showGoalCard() {
+  const gp = G.pads.find(p => p.goal), card = $('#goalCard');
+  $('#gcLv').textContent = `Уровень ${G.lvl + 1} · ${G.L.name}`;
+  $('#gcName').textContent = `Построй: ${G.L.goal}`;
+  $('#gcCost').textContent = '$' + gp.cost;
+  $('#gcNote').textContent = G.L.wolves && G.L.wolves.boss ? `Сначала прогони ${G.L.wolves.boss.name === 'ВОЖАК' || !G.L.wolves.boss.name ? 'вожака' : G.L.wolves.boss.name.toLowerCase()} — иначе стройка закрыта.` : 'Зарабатывай, улучшайся и вставай на площадку цели.';
+  $('#gcPar').textContent = `★ за скорость — успей за ${mmss(parTime(G.L))}`;
+  card.classList.add('show');
+  clearTimeout(goalCardT); goalCardT = setTimeout(() => card.classList.remove('show'), 3500);
+  beep(660, .12, 'triangle', .05); setTimeout(() => beep(880, .16, 'triangle', .05), 110);
+}
+$('#goalCard').addEventListener('pointerdown', () => { clearTimeout(goalCardT); $('#goalCard').classList.remove('show'); });
+
+// ---------- Реклама (только в Android-приложении, через window.AndroidAds) ----------
+// За награду: продолжить после проигрыша с одним сердцем, ×2 денег на минуту.
+// Межэкранная: между уровнями, начиная с 4-го, не чаще раза в 3 минуты.
+const ADS = {
+  native: !!window.AndroidAds, cb: {}, lastInter: performance.now(),
+  ready() { try { return this.native && window.AndroidAds.rewardedReady(); } catch (e) { return false; } },
+  show(kind, tag, done) {
+    if (!this.native) { done('failed'); return; }
+    this.cb[tag] = done;
+    try { kind === 'rewarded' ? window.AndroidAds.showRewarded(tag) : window.AndroidAds.showInterstitial(tag); } catch (e) { delete this.cb[tag]; done('failed'); }
+  },
+};
+window.onNativeAd = (tag, result) => { const f = ADS.cb[tag]; delete ADS.cb[tag]; if (f) f(result); };
+let boostOfferT = 60;
+// Таймер звезды в шапке: сколько осталось; когда время вышло — серый и зачёркнут
+let parShown = '';
+function updPar() {
+  const left = parTime(G.L) - G.time, late = left < 0, txt = late ? `★ ${mmss(parTime(G.L))}` : `★ ${mmss(left)}`;
+  if (txt + late === parShown) return; parShown = txt + late;
+  const el = $('#parT'); el.textContent = txt; el.classList.toggle('late', late);
+}
+function updBoost(dt) {
+  if (G.boostT > 0) { G.boostT -= dt; if (G.boostT <= 0) banner('×2 денег закончилось'); }
+  boostOfferT -= dt;
+  const show = G.running && !G.won && G.lvl >= 1 && !(G.boostT > 0) && boostOfferT <= 0 && ADS.ready();
+  $('#boostBtn').hidden = !show;
+}
+$('#boostBtn').addEventListener('click', () => {
+  const was = G.running; G.running = false; $('#boostBtn').hidden = true;
+  ADS.show('rewarded', 'boost', r => {
+    G.running = was; boostOfferT = 120;
+    if (r === 'reward') { G.boostT = 60; banner('×2 денег на минуту!'); SFX.build(); }
+  });
+});
+function revive() {
+  G.won = false; G.lost = false; G.hp = 1; G.inv = 4; G.stun = 0; drawHearts();
+  resetRig(player.ch.rig); player.ch.g.rotation.z = 0; player.ch.g.position.y = 0;
+  G.wolves.forEach(o => { if (!o.boss) { o.state = 'flee'; o.scared = true; } });
+  SCREENS.forEach(k => { $('#' + k).hidden = true; }); $('#hud').hidden = false;
+  G.running = true; banner('Ещё одна попытка!');
+}
+$('#reviveBtn').addEventListener('click', () => {
+  $('#reviveBtn').hidden = true;
+  ADS.show('rewarded', 'revive', r => { if (r === 'reward') revive(); });
+});
+
+// ---------- Обучение на первом уровне ----------
+// Четыре шага с подсказкой сверху и кольцом на земле: собрать, продать, забрать деньги, построить
+const TUT = [
+  { text: 'Подойди к ёлкам — брёвна сами прыгнут в руки', at: () => { const p = player.ch.g.position; return G.sources.filter(s => !s.dead).sort((a, b) => a.pos.distanceTo(p) - b.pos.distanceTo(p))[0]?.pos; }, done: () => player.stack.count >= 4 },
+  { text: 'Неси брёвна в лавку — встань на зону «ПРОДАТЬ»', at: () => G.markets[0]?.drop, done: () => player.stack.count === 0 && G.markets[0]?.cash > 0 },
+  { text: 'Забери деньги с зоны «ДЕНЬГИ»', at: () => G.markets[0]?.cashZ, done: () => G.money > 0 && !G.markets[0]?.cash },
+  { text: 'Встань на площадку с ценой и постой — деньги уйдут в стройку', at: () => { const p = G.pads.filter(q => q.visible && !q.done && !q.lockedAt && !q.goal).sort((a, b) => a.cost - b.cost)[0]; return p && new THREE.Vector3(p.x, 0, p.z); }, done: () => G.pads.some(q => q.done) },
+];
+let tut = null;
+function startTutorial() {
+  if (tut) { world.remove(tut.mark); tut = null; }
+  $('#tut').hidden = true;
+  if (G.lvl !== 0 || store.get('kvr_tut_done', false)) return;
+  const mark = new THREE.Group();
+  const ring = new THREE.Mesh(new THREE.RingGeometry(.95, 1.2, 40), new THREE.MeshBasicMaterial({ color: 0xffd23f, transparent: true, opacity: .9, depthWrite: false }));
+  ring.rotation.x = -PI / 2; ring.position.y = .05;
+  const cone = new THREE.Mesh(new THREE.ConeGeometry(.28, .6, 12), new THREE.MeshBasicMaterial({ color: 0xffd23f }));
+  cone.rotation.x = PI;
+  mark.add(ring, cone); world.add(mark);
+  tut = { step: 0, mark, ring, cone };
+  $('#hint').hidden = true; tut.mark.visible = false;
+  // подсказка обучения появляется, когда уйдёт карточка цели
+  tut.wait = 3.6;
+}
+function showTutStep() {
+  $('#tut').hidden = false;
+  $('#tutStep').textContent = `Шаг ${tut.step + 1} из ${TUT.length}`;
+  $('#tutText').textContent = TUT[tut.step].text;
+}
+function updTutorial() {
+  if (!tut || !G.running) return;
+  if (tut.wait > 0) { tut.wait -= 1 / 60; if (tut.wait <= 0 || !$('#goalCard').classList.contains('show')) { tut.wait = 0; showTutStep(); } else return; }
+  const st = TUT[tut.step];
+  if (st.done()) {
+    SFX.coin(); tut.step++;
+    if (tut.step >= TUT.length) {
+      world.remove(tut.mark); tut = null; store.set('kvr_tut_done', true);
+      $('#tutStep').textContent = 'Готово'; $('#tutText').textContent = `Теперь копи на цель — ${G.L.goal}. Удачи!`;
+      setTimeout(() => { $('#tut').hidden = true; }, 4000);
+      return;
+    }
+    showTutStep();
+  }
+  const at = TUT[tut.step].at();
+  tut.mark.visible = !!at;
+  if (at) {
+    tut.mark.position.set(at.x, 0, at.z);
+    const k = 1 + Math.sin(G.time * 5) * .08; tut.ring.scale.set(k, k, k);
+    tut.cone.position.y = 2.6 + Math.abs(Math.sin(G.time * 4)) * .5;
+  }
+}
+
 function startLevel(i) {
   initAudio();
   const need = missingAssets(worldAssets(i));
@@ -1786,17 +2410,25 @@ function startLevel(i) {
     return;
   }
   if (i !== G.lvl || G.won || G.time > 0) loadLevel(i);
-  $('#menu').hidden = true; $('#win').hidden = true; $('#hud').hidden = false;
+  SCREENS.forEach(k => { $('#' + k).hidden = true; }); $('#hud').hidden = false;
+  if (G.time === 0) { showGoalCard(); startTutorial(); }
   G.running = true;
 }
 $('#playBtn').addEventListener('click', () => {
   initAudio();
-  if (G.time > 0 && !G.won) { $('#menu').hidden = true; $('#hud').hidden = false; G.running = true; }
+  if (G.time > 0 && !G.won) { SCREENS.forEach(k => { $('#' + k).hidden = true; }); $('#hud').hidden = false; G.running = true; }
   else startLevel(G.lvl);
 });
 $('#menuBtn').addEventListener('click', openMenu);
-$('#soundBtn').addEventListener('click', () => { muted = !muted; store.set('kvr_muted', muted); renderLevels(); });
-$('#nextBtn').addEventListener('click', () => { startLevel(G.lost ? G.lvl : G.lvl === LEVELS.length - 1 ? 0 : G.lvl + 1); });
+$('#soundBtn').addEventListener('click', () => { initAudio(); muted = !muted; store.set('kvr_muted', muted); if (sfxBus) sfxBus.gain.setTargetAtTime(muted ? 0 : 1, AC.currentTime, .05); renderLevels(); SFX.ui(); });
+$('#musicBtn').addEventListener('click', () => { initAudio(); musicOn = !musicOn; store.set('kvr_music', musicOn); if (musicBus) musicBus.gain.setTargetAtTime(musicOn ? .55 : 0, AC.currentTime, .2); renderLevels(); SFX.ui(); });
+$('#nextBtn').addEventListener('click', () => {
+  const next = G.lost ? G.lvl : G.lvl === LEVELS.length - 1 ? 0 : G.lvl + 1;
+  if (ADS.native && G.lvl >= 3 && performance.now() - ADS.lastInter > 180000) {
+    ADS.lastInter = performance.now();
+    ADS.show('interstitial', 'between', () => startLevel(next));
+  } else startLevel(next);
+});
 $('#toMenuBtn').addEventListener('click', () => { $('#win').hidden = true; if (G.lost) loadLevel(G.lvl); else if (G.lvl + 1 < LEVELS.length) loadLevel(G.lvl + 1); openMenu(); });
 
 // ---------- Цикл ----------
@@ -1812,13 +2444,18 @@ function frame(now) {
   const dt = Math.min(.05, (now - last) / 1000); last = now;
   if (G.running) {
     G.time += dt;
+    updPar();
     updPlayer(dt); updSources(dt); updConvs(dt); updDocks(dt); updHelpers(dt); updWolves(dt);
     updHud();
   } else {
     animWalk(player.ch, false, dt, 1);
   }
   for (const f of G.fires) { const s = 1 + Math.sin(now * .02) * .08 + Math.sin(now * .033) * .05; f.md.flame.scale.set(s, s * 1.1, s); f.md.inner.scale.setScalar(2 - s); }
-  updRigs(dt); updFlyers(dt); updParts(dt); updFloats(dt); updCamera(dt);
+  if (AC && G.L) {
+    const danger = G.running && !G.won && (G.boss || G.wolves.some(o => o.state !== 'flee' && insideFence(o.pos.x, o.pos.z) && (o.kind !== 'fox' || o.state === 'steal')));
+    Music.setDanger(!!danger, !G.running);
+  }
+  updRigs(dt); updFlyers(dt); updParts(dt); updFloats(dt); updCamera(dt); updArrows(); updTutorial(); updBoost(dt);
   renderer.render(scene, camera);
   requestAnimationFrame(frame);
 }
@@ -1834,7 +2471,7 @@ function boot(data) {
   const saved = Math.min(store.get('kvr_unlocked', 0), LEVELS.length - 1);
   const startAt = data && Number.isInteger(data.lvl) ? Math.min(data.lvl, unlocked) : saved;
   const btn = $('#playBtn'); btn.disabled = true; btn.textContent = 'Загрузка…';
-  const go = () => { rebuildPlayer(); loadLevel(startAt); renderLevels(); btn.disabled = false; btn.textContent = 'Играть'; };
+  const go = () => { rebuildPlayer(); loadLevel(startAt); renderLevels(); btn.disabled = false; btn.innerHTML = '<span class="pb-main">Играть</span><span class="pb-sub" id="playSub"></span>'; renderLevels(); };
   requestAnimationFrame(frame);
   const fonts = document.fonts && document.fonts.load ? Promise.race([document.fonts.load('800 30px Unbounded'), new Promise(r => setTimeout(r, 1500))]) : Promise.resolve();
   Promise.all([fonts.catch(() => {}), loadAssets([...COMMON_ASSETS, ...worldAssets(startAt)], k => { btn.textContent = `Загрузка ${Math.round(k * 100)}%`; })]).then(go, go);
